@@ -27,9 +27,26 @@ type weapon {
   custom: Boolean!
 }
 
-
 type Query {
   weapons: [weapon!]!
+  weaponByName(name: String!): weapon
+  weaponsByAttributeScaling(attribute: Attributes!, scale: AttributeScales!): [weapon]
+}
+
+enum Attributes {
+  STR
+  DEX
+  INT
+  FAI
+  ARC
+}
+
+enum AttributeScales {
+  A
+  B
+  C
+  D
+  E
 }
 
 

@@ -2,6 +2,12 @@
 
 package model
 
+import (
+	"fmt"
+	"io"
+	"strconv"
+)
+
 type Weapon struct {
 	Name    string `json:"name"`
 	Type    string `json:"type"`
@@ -29,4 +35,98 @@ type Weapon struct {
 	Upgrade string `json:"upgrade"`
 	ID      string `json:"id"`
 	Custom  bool   `json:"custom"`
+}
+
+type AttributeScales string
+
+const (
+	AttributeScalesA AttributeScales = "A"
+	AttributeScalesB AttributeScales = "B"
+	AttributeScalesC AttributeScales = "C"
+	AttributeScalesD AttributeScales = "D"
+	AttributeScalesE AttributeScales = "E"
+)
+
+var AllAttributeScales = []AttributeScales{
+	AttributeScalesA,
+	AttributeScalesB,
+	AttributeScalesC,
+	AttributeScalesD,
+	AttributeScalesE,
+}
+
+func (e AttributeScales) IsValid() bool {
+	switch e {
+	case AttributeScalesA, AttributeScalesB, AttributeScalesC, AttributeScalesD, AttributeScalesE:
+		return true
+	}
+	return false
+}
+
+func (e AttributeScales) String() string {
+	return string(e)
+}
+
+func (e *AttributeScales) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = AttributeScales(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid AttributeScales", str)
+	}
+	return nil
+}
+
+func (e AttributeScales) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+type Attributes string
+
+const (
+	AttributesStr Attributes = "STR"
+	AttributesDex Attributes = "DEX"
+	AttributesInt Attributes = "INT"
+	AttributesFai Attributes = "FAI"
+	AttributesArc Attributes = "ARC"
+)
+
+var AllAttributes = []Attributes{
+	AttributesStr,
+	AttributesDex,
+	AttributesInt,
+	AttributesFai,
+	AttributesArc,
+}
+
+func (e Attributes) IsValid() bool {
+	switch e {
+	case AttributesStr, AttributesDex, AttributesInt, AttributesFai, AttributesArc:
+		return true
+	}
+	return false
+}
+
+func (e Attributes) String() string {
+	return string(e)
+}
+
+func (e *Attributes) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = Attributes(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid Attributes", str)
+	}
+	return nil
+}
+
+func (e Attributes) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
 }
