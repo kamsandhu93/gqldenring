@@ -1,0 +1,35 @@
+type weapon {
+  name: String!
+  type: String!
+  phy: Int!
+  mag: Int!
+  fir: Int!
+  lit: Int!
+  hol: Int!
+  cri: Int!
+  sta: Int!
+  str: String!
+  dex: String!
+  int: String!
+  fai: String!
+  arc: String!
+  any: String!
+  phyb: Int!
+  magb: Int!
+  firb: Int!
+  litb: Int!
+  holb: Int!
+  bst: String!
+  Rst: String!
+  wgt: String!
+  upgrade: String!
+  id: ID!
+  custom: Boolean!
+}
+
+
+type Query {
+  weapons: [weapon!]!
+}
+
+
