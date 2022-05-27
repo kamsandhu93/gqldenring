@@ -12,9 +12,9 @@ import (
 
 var (
 	//go:embed elden_ring_weapon.csv
-	csv     string
-	db      []*model.Weapon
-	dbMutex sync.Mutex
+	csv string
+	db  []*model.Weapon
+	mu  sync.RWMutex
 )
 
 func init() {
@@ -28,9 +28,21 @@ func Printdb() {
 }
 
 func Database() []*model.Weapon {
-	dbMutex.Lock()
-	defer dbMutex.Unlock()
+	mu.RLock()
+	defer mu.RUnlock()
 	return db
+}
+
+func NewWeapon(weapon *model.NewWeapon) (*model.Weapon, error) {
+	newWeapon := &model.Weapon{
+		Name:   weapon.Name,
+		Custom: true,
+		ID:     uuid.UUIDv4(),
+	}
+	mu.Lock()
+	defer mu.Unlock()
+	db = append(db, newWeapon)
+	return newWeapon, nil
 }
 
 func parseCsv() []*model.Weapon {

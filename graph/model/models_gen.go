@@ -8,6 +8,10 @@ import (
 	"strconv"
 )
 
+type NewWeapon struct {
+	Name string `json:"name"`
+}
+
 type Weapon struct {
 	Name    string `json:"name"`
 	Type    string `json:"type"`

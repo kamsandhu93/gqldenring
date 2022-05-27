@@ -12,6 +12,11 @@ import (
 	"github.com/kamsandhu93/gqldenring/graph/model"
 )
 
+func (r *mutationResolver) CreateWeapon(ctx context.Context, input *model.NewWeapon) (*model.Weapon, error) {
+	return db.NewWeapon(input)
+
+}
+
 func (r *queryResolver) Weapons(ctx context.Context) ([]*model.Weapon, error) {
 	weapons := db.Database()
 	return weapons, nil
@@ -54,7 +59,22 @@ func (r *queryResolver) WeaponsByAttributeScaling(ctx context.Context, attribute
 	return results, nil
 }
 
+func (r *queryResolver) WeaponsByCustom(ctx context.Context, custom bool) ([]*model.Weapon, error) {
+	weapons := db.Database()
+	results := []*model.Weapon{}
+	for _, weapon := range weapons {
+		if weapon.Custom == custom {
+			results = append(results, weapon)
+		}
+	}
+	return results, nil
+}
+
+// Mutation returns generated.MutationResolver implementation.
+func (r *Resolver) Mutation() generated.MutationResolver { return &mutationResolver{r} }
+
 // Query returns generated.QueryResolver implementation.
 func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
 
+type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
