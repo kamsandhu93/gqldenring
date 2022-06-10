@@ -426,11 +426,11 @@ var sources = []*ast.Source{
   hol: Int!
   cri: Int!
   sta: Int!
-  str: String!
-  dex: String!
-  int: String!
-  fai: String!
-  arc: String!
+  str: AttributeScales!
+  dex: AttributeScales!
+  int: AttributeScales!
+  fai: AttributeScales!
+  arc: AttributeScales!
   any: String!
   phyb: Int!
   magb: Int!
@@ -474,6 +474,7 @@ enum AttributeScales {
   C
   D
   E
+  _
 }
 
 
@@ -3452,9 +3453,9 @@ func (ec *executionContext) _weapon_str(ctx context.Context, field graphql.Colle
 		}
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(model.AttributeScales)
 	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
+	return ec.marshalNAttributeScales2githubᚗcomᚋkamsandhu93ᚋgqldenringᚋgraphᚋmodelᚐAttributeScales(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_weapon_str(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -3464,7 +3465,7 @@ func (ec *executionContext) fieldContext_weapon_str(ctx context.Context, field g
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
+			return nil, errors.New("field of type AttributeScales does not have child fields")
 		},
 	}
 	return fc, nil
@@ -3496,9 +3497,9 @@ func (ec *executionContext) _weapon_dex(ctx context.Context, field graphql.Colle
 		}
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(model.AttributeScales)
 	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
+	return ec.marshalNAttributeScales2githubᚗcomᚋkamsandhu93ᚋgqldenringᚋgraphᚋmodelᚐAttributeScales(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_weapon_dex(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -3508,7 +3509,7 @@ func (ec *executionContext) fieldContext_weapon_dex(ctx context.Context, field g
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
+			return nil, errors.New("field of type AttributeScales does not have child fields")
 		},
 	}
 	return fc, nil
@@ -3540,9 +3541,9 @@ func (ec *executionContext) _weapon_int(ctx context.Context, field graphql.Colle
 		}
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(model.AttributeScales)
 	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
+	return ec.marshalNAttributeScales2githubᚗcomᚋkamsandhu93ᚋgqldenringᚋgraphᚋmodelᚐAttributeScales(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_weapon_int(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -3552,7 +3553,7 @@ func (ec *executionContext) fieldContext_weapon_int(ctx context.Context, field g
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
+			return nil, errors.New("field of type AttributeScales does not have child fields")
 		},
 	}
 	return fc, nil
@@ -3584,9 +3585,9 @@ func (ec *executionContext) _weapon_fai(ctx context.Context, field graphql.Colle
 		}
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(model.AttributeScales)
 	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
+	return ec.marshalNAttributeScales2githubᚗcomᚋkamsandhu93ᚋgqldenringᚋgraphᚋmodelᚐAttributeScales(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_weapon_fai(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -3596,7 +3597,7 @@ func (ec *executionContext) fieldContext_weapon_fai(ctx context.Context, field g
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
+			return nil, errors.New("field of type AttributeScales does not have child fields")
 		},
 	}
 	return fc, nil
@@ -3628,9 +3629,9 @@ func (ec *executionContext) _weapon_arc(ctx context.Context, field graphql.Colle
 		}
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(model.AttributeScales)
 	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
+	return ec.marshalNAttributeScales2githubᚗcomᚋkamsandhu93ᚋgqldenringᚋgraphᚋmodelᚐAttributeScales(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_weapon_arc(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -3640,7 +3641,7 @@ func (ec *executionContext) fieldContext_weapon_arc(ctx context.Context, field g
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
+			return nil, errors.New("field of type AttributeScales does not have child fields")
 		},
 	}
 	return fc, nil

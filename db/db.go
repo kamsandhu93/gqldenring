@@ -71,11 +71,11 @@ func parseCsv() []*model.Weapon {
 			Hol:     intFromStr(fields[6]),
 			Cri:     intFromStr(fields[7]),
 			Sta:     intFromStr(fields[8]),
-			Str:     fields[9],
-			Dex:     fields[10],
-			Int:     fields[11],
-			Fai:     fields[12],
-			Arc:     fields[13],
+			Str:     atrScaleFromStr(fields[9]),
+			Dex:     atrScaleFromStr(fields[10]),
+			Int:     atrScaleFromStr(fields[11]),
+			Fai:     atrScaleFromStr(fields[12]),
+			Arc:     atrScaleFromStr(fields[13]),
 			Any:     fields[14],
 			Phyb:    intFromStr(fields[15]),
 			Magb:    intFromStr(fields[16]),
@@ -106,4 +106,23 @@ func intFromStr(str string) int {
 		panic(err)
 	}
 	return result
+}
+
+func atrScaleFromStr(atrScale string) model.AttributeScales {
+	switch atrScale {
+	case "A":
+		return model.AttributeScalesA
+	case "B":
+		return model.AttributeScalesB
+	case "C":
+		return model.AttributeScalesC
+	case "D":
+		return model.AttributeScalesD
+	case "E":
+		return model.AttributeScalesE
+	default:
+		return model.AttributeScales_
+	}
+
+	panic("Shouldnt get here")
 }

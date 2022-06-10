@@ -8,11 +8,11 @@ type weapon {
   hol: Int!
   cri: Int!
   sta: Int!
-  str: String!
-  dex: String!
-  int: String!
-  fai: String!
-  arc: String!
+  str: AttributeScales!
+  dex: AttributeScales!
+  int: AttributeScales!
+  fai: AttributeScales!
+  arc: AttributeScales!
   any: String!
   phyb: Int!
   magb: Int!
@@ -56,6 +56,7 @@ enum AttributeScales {
   C
   D
   E
+  _
 }
 
 

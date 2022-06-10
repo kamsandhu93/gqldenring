@@ -14,7 +14,6 @@ import (
 
 func (r *mutationResolver) CreateWeapon(ctx context.Context, input *model.NewWeapon) (*model.Weapon, error) {
 	return db.NewWeapon(input)
-
 }
 
 func (r *queryResolver) Weapons(ctx context.Context) ([]*model.Weapon, error) {
@@ -35,24 +34,24 @@ func (r *queryResolver) WeaponByName(ctx context.Context, name string) (*model.W
 func (r *queryResolver) WeaponsByAttributeScaling(ctx context.Context, attribute model.Attributes, scale model.AttributeScales) ([]*model.Weapon, error) {
 	weapons := db.Database()
 	results := []*model.Weapon{}
-	atr := ""
+	var atrScale model.AttributeScales
 	for _, weapon := range weapons {
 		switch attribute {
 		case model.AttributesStr:
-			atr = weapon.Str
+			atrScale = weapon.Str
 		case model.AttributesDex:
-			atr = weapon.Dex
+			atrScale = weapon.Dex
 		case model.AttributesInt:
-			atr = weapon.Int
+			atrScale = weapon.Int
 		case model.AttributesFai:
-			atr = weapon.Fai
+			atrScale = weapon.Fai
 		case model.AttributesArc:
-			atr = weapon.Arc
+			atrScale = weapon.Arc
 		default:
-			atr = "Unknown"
+			atrScale = "Unknown"
 		}
 
-		if strings.ToUpper(atr) == string(scale) {
+		if strings.ToUpper(string(atrScale)) == strings.ToUpper(string(scale)) {
 			results = append(results, weapon)
 		}
 	}

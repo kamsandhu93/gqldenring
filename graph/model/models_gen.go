@@ -13,32 +13,32 @@ type NewWeapon struct {
 }
 
 type Weapon struct {
-	Name    string `json:"name"`
-	Type    string `json:"type"`
-	Phy     int    `json:"phy"`
-	Mag     int    `json:"mag"`
-	Fir     int    `json:"fir"`
-	Lit     int    `json:"lit"`
-	Hol     int    `json:"hol"`
-	Cri     int    `json:"cri"`
-	Sta     int    `json:"sta"`
-	Str     string `json:"str"`
-	Dex     string `json:"dex"`
-	Int     string `json:"int"`
-	Fai     string `json:"fai"`
-	Arc     string `json:"arc"`
-	Any     string `json:"any"`
-	Phyb    int    `json:"phyb"`
-	Magb    int    `json:"magb"`
-	Firb    int    `json:"firb"`
-	Litb    int    `json:"litb"`
-	Holb    int    `json:"holb"`
-	Bst     string `json:"bst"`
-	Rst     string `json:"Rst"`
-	Wgt     string `json:"wgt"`
-	Upgrade string `json:"upgrade"`
-	ID      string `json:"id"`
-	Custom  bool   `json:"custom"`
+	Name    string          `json:"name"`
+	Type    string          `json:"type"`
+	Phy     int             `json:"phy"`
+	Mag     int             `json:"mag"`
+	Fir     int             `json:"fir"`
+	Lit     int             `json:"lit"`
+	Hol     int             `json:"hol"`
+	Cri     int             `json:"cri"`
+	Sta     int             `json:"sta"`
+	Str     AttributeScales `json:"str"`
+	Dex     AttributeScales `json:"dex"`
+	Int     AttributeScales `json:"int"`
+	Fai     AttributeScales `json:"fai"`
+	Arc     AttributeScales `json:"arc"`
+	Any     string          `json:"any"`
+	Phyb    int             `json:"phyb"`
+	Magb    int             `json:"magb"`
+	Firb    int             `json:"firb"`
+	Litb    int             `json:"litb"`
+	Holb    int             `json:"holb"`
+	Bst     string          `json:"bst"`
+	Rst     string          `json:"Rst"`
+	Wgt     string          `json:"wgt"`
+	Upgrade string          `json:"upgrade"`
+	ID      string          `json:"id"`
+	Custom  bool            `json:"custom"`
 }
 
 type AttributeScales string
@@ -49,6 +49,7 @@ const (
 	AttributeScalesC AttributeScales = "C"
 	AttributeScalesD AttributeScales = "D"
 	AttributeScalesE AttributeScales = "E"
+	AttributeScales_ AttributeScales = "_"
 )
 
 var AllAttributeScales = []AttributeScales{
@@ -57,11 +58,12 @@ var AllAttributeScales = []AttributeScales{
 	AttributeScalesC,
 	AttributeScalesD,
 	AttributeScalesE,
+	AttributeScales_,
 }
 
 func (e AttributeScales) IsValid() bool {
 	switch e {
-	case AttributeScalesA, AttributeScalesB, AttributeScalesC, AttributeScalesD, AttributeScalesE:
+	case AttributeScalesA, AttributeScalesB, AttributeScalesC, AttributeScalesD, AttributeScalesE, AttributeScales_:
 		return true
 	}
 	return false
