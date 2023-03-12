@@ -16,6 +16,14 @@ func (r *mutationResolver) CreateWeapon(ctx context.Context, input *model.NewWea
 	return db.NewWeapon(input)
 }
 
+func (r *mutationResolver) UpdateWeapon(ctx context.Context, id *string, input *model.NewWeapon) (*model.Weapon, error) {
+	return db.UpdateWeapon(*id, input)
+}
+
+func (r *mutationResolver) DeleteWeapon(ctx context.Context, id *string) (*model.Weapon, error) {
+	return db.DeleteWeapon(*id)
+}
+
 func (r *queryResolver) Weapons(ctx context.Context) ([]*model.Weapon, error) {
 	weapons := db.Database()
 	return weapons, nil
@@ -67,6 +75,16 @@ func (r *queryResolver) WeaponsByCustom(ctx context.Context, custom bool) ([]*mo
 		}
 	}
 	return results, nil
+}
+
+func (r *queryResolver) WeaponByID(ctx context.Context, id string) (*model.Weapon, error) {
+	weapons := db.Database()
+	for _, weapon := range weapons {
+		if strings.ToLower(weapon.ID) == strings.ToLower(id) {
+			return weapon, nil
+		}
+	}
+	return nil, nil
 }
 
 // Mutation returns generated.MutationResolver implementation.

@@ -42,7 +42,44 @@ func NewWeapon(weapon *model.NewWeapon) (*model.Weapon, error) {
 	mu.Lock()
 	defer mu.Unlock()
 	db = append(db, newWeapon)
+	fmt.Printf("[INFO] Created weapon with ID %s", newWeapon.ID)
 	return newWeapon, nil
+}
+
+func UpdateWeapon(id string, weapon *model.NewWeapon) (*model.Weapon, error) {
+	newWeapon := &model.Weapon{
+		Name:   weapon.Name,
+		Custom: true,
+		ID:     id,
+	}
+	mu.Lock()
+	defer mu.Unlock()
+	for i, weapon := range db {
+		if weapon.ID == id {
+			db[i] = newWeapon
+			break
+		}
+	}
+	fmt.Printf("[INFO] Updated weapon with ID %s", newWeapon.ID)
+
+	return newWeapon, nil
+}
+
+func DeleteWeapon(id string) (*model.Weapon, error) {
+	mu.Lock()
+	var delwep *model.Weapon
+	defer mu.Unlock()
+	for i, weapon := range db {
+		if weapon.ID == id {
+			db[i] = db[len(db)-1]
+			db = db[:len(db)-1]
+			delwep = weapon
+			break
+		}
+	}
+	fmt.Printf("[INFO] Deleted weapon with ID %s", delwep.ID)
+
+	return delwep, nil
 }
 
 func parseCsv() []*model.Weapon {

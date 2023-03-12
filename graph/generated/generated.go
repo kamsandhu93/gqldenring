@@ -46,9 +46,12 @@ type DirectiveRoot struct {
 type ComplexityRoot struct {
 	Mutation struct {
 		CreateWeapon func(childComplexity int, input *model.NewWeapon) int
+		DeleteWeapon func(childComplexity int, id *string) int
+		UpdateWeapon func(childComplexity int, id *string, input *model.NewWeapon) int
 	}
 
 	Query struct {
+		WeaponByID                func(childComplexity int, id string) int
 		WeaponByName              func(childComplexity int, name string) int
 		Weapons                   func(childComplexity int) int
 		WeaponsByAttributeScaling func(childComplexity int, attribute model.Attributes, scale model.AttributeScales) int
@@ -87,12 +90,15 @@ type ComplexityRoot struct {
 
 type MutationResolver interface {
 	CreateWeapon(ctx context.Context, input *model.NewWeapon) (*model.Weapon, error)
+	UpdateWeapon(ctx context.Context, id *string, input *model.NewWeapon) (*model.Weapon, error)
+	DeleteWeapon(ctx context.Context, id *string) (*model.Weapon, error)
 }
 type QueryResolver interface {
 	Weapons(ctx context.Context) ([]*model.Weapon, error)
 	WeaponByName(ctx context.Context, name string) (*model.Weapon, error)
 	WeaponsByAttributeScaling(ctx context.Context, attribute model.Attributes, scale model.AttributeScales) ([]*model.Weapon, error)
 	WeaponsByCustom(ctx context.Context, custom bool) ([]*model.Weapon, error)
+	WeaponByID(ctx context.Context, id string) (*model.Weapon, error)
 }
 
 type executableSchema struct {
@@ -121,6 +127,42 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.CreateWeapon(childComplexity, args["input"].(*model.NewWeapon)), true
+
+	case "Mutation.deleteWeapon":
+		if e.complexity.Mutation.DeleteWeapon == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_deleteWeapon_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.DeleteWeapon(childComplexity, args["id"].(*string)), true
+
+	case "Mutation.updateWeapon":
+		if e.complexity.Mutation.UpdateWeapon == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updateWeapon_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdateWeapon(childComplexity, args["id"].(*string), args["input"].(*model.NewWeapon)), true
+
+	case "Query.WeaponById":
+		if e.complexity.Query.WeaponByID == nil {
+			break
+		}
+
+		args, err := ec.field_Query_WeaponById_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.WeaponByID(childComplexity, args["id"].(string)), true
 
 	case "Query.weaponByName":
 		if e.complexity.Query.WeaponByName == nil {
@@ -454,10 +496,13 @@ type Query {
   weaponByName(name: String!): weapon
   weaponsByAttributeScaling(attribute: Attributes!, scale: AttributeScales!): [weapon]
   WeaponsByCustom(custom: Boolean!): [weapon!]!
+  WeaponById(id: ID!): weapon
 }
 
 type Mutation {
   createWeapon(input: newWeapon): weapon
+  updateWeapon(id: ID, input: newWeapon): weapon
+  deleteWeapon(id: ID): weapon
 }
 
 enum Attributes {
@@ -498,6 +543,60 @@ func (ec *executionContext) field_Mutation_createWeapon_args(ctx context.Context
 		}
 	}
 	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_deleteWeapon_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *string
+	if tmp, ok := rawArgs["id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+		arg0, err = ec.unmarshalOID2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["id"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_updateWeapon_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *string
+	if tmp, ok := rawArgs["id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+		arg0, err = ec.unmarshalOID2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["id"] = arg0
+	var arg1 *model.NewWeapon
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg1, err = ec.unmarshalOnewWeapon2ᚖgithubᚗcomᚋkamsandhu93ᚋgqldenringᚋgraphᚋmodelᚐNewWeapon(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg1
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_WeaponById_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+		arg0, err = ec.unmarshalNID2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["id"] = arg0
 	return args, nil
 }
 
@@ -708,6 +807,218 @@ func (ec *executionContext) fieldContext_Mutation_createWeapon(ctx context.Conte
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Mutation_createWeapon_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_updateWeapon(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_updateWeapon(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdateWeapon(rctx, fc.Args["id"].(*string), fc.Args["input"].(*model.NewWeapon))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.Weapon)
+	fc.Result = res
+	return ec.marshalOweapon2ᚖgithubᚗcomᚋkamsandhu93ᚋgqldenringᚋgraphᚋmodelᚐWeapon(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_updateWeapon(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "name":
+				return ec.fieldContext_weapon_name(ctx, field)
+			case "type":
+				return ec.fieldContext_weapon_type(ctx, field)
+			case "phy":
+				return ec.fieldContext_weapon_phy(ctx, field)
+			case "mag":
+				return ec.fieldContext_weapon_mag(ctx, field)
+			case "fir":
+				return ec.fieldContext_weapon_fir(ctx, field)
+			case "lit":
+				return ec.fieldContext_weapon_lit(ctx, field)
+			case "hol":
+				return ec.fieldContext_weapon_hol(ctx, field)
+			case "cri":
+				return ec.fieldContext_weapon_cri(ctx, field)
+			case "sta":
+				return ec.fieldContext_weapon_sta(ctx, field)
+			case "str":
+				return ec.fieldContext_weapon_str(ctx, field)
+			case "dex":
+				return ec.fieldContext_weapon_dex(ctx, field)
+			case "int":
+				return ec.fieldContext_weapon_int(ctx, field)
+			case "fai":
+				return ec.fieldContext_weapon_fai(ctx, field)
+			case "arc":
+				return ec.fieldContext_weapon_arc(ctx, field)
+			case "any":
+				return ec.fieldContext_weapon_any(ctx, field)
+			case "phyb":
+				return ec.fieldContext_weapon_phyb(ctx, field)
+			case "magb":
+				return ec.fieldContext_weapon_magb(ctx, field)
+			case "firb":
+				return ec.fieldContext_weapon_firb(ctx, field)
+			case "litb":
+				return ec.fieldContext_weapon_litb(ctx, field)
+			case "holb":
+				return ec.fieldContext_weapon_holb(ctx, field)
+			case "bst":
+				return ec.fieldContext_weapon_bst(ctx, field)
+			case "Rst":
+				return ec.fieldContext_weapon_Rst(ctx, field)
+			case "wgt":
+				return ec.fieldContext_weapon_wgt(ctx, field)
+			case "upgrade":
+				return ec.fieldContext_weapon_upgrade(ctx, field)
+			case "id":
+				return ec.fieldContext_weapon_id(ctx, field)
+			case "custom":
+				return ec.fieldContext_weapon_custom(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type weapon", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_updateWeapon_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_deleteWeapon(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_deleteWeapon(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().DeleteWeapon(rctx, fc.Args["id"].(*string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.Weapon)
+	fc.Result = res
+	return ec.marshalOweapon2ᚖgithubᚗcomᚋkamsandhu93ᚋgqldenringᚋgraphᚋmodelᚐWeapon(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_deleteWeapon(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "name":
+				return ec.fieldContext_weapon_name(ctx, field)
+			case "type":
+				return ec.fieldContext_weapon_type(ctx, field)
+			case "phy":
+				return ec.fieldContext_weapon_phy(ctx, field)
+			case "mag":
+				return ec.fieldContext_weapon_mag(ctx, field)
+			case "fir":
+				return ec.fieldContext_weapon_fir(ctx, field)
+			case "lit":
+				return ec.fieldContext_weapon_lit(ctx, field)
+			case "hol":
+				return ec.fieldContext_weapon_hol(ctx, field)
+			case "cri":
+				return ec.fieldContext_weapon_cri(ctx, field)
+			case "sta":
+				return ec.fieldContext_weapon_sta(ctx, field)
+			case "str":
+				return ec.fieldContext_weapon_str(ctx, field)
+			case "dex":
+				return ec.fieldContext_weapon_dex(ctx, field)
+			case "int":
+				return ec.fieldContext_weapon_int(ctx, field)
+			case "fai":
+				return ec.fieldContext_weapon_fai(ctx, field)
+			case "arc":
+				return ec.fieldContext_weapon_arc(ctx, field)
+			case "any":
+				return ec.fieldContext_weapon_any(ctx, field)
+			case "phyb":
+				return ec.fieldContext_weapon_phyb(ctx, field)
+			case "magb":
+				return ec.fieldContext_weapon_magb(ctx, field)
+			case "firb":
+				return ec.fieldContext_weapon_firb(ctx, field)
+			case "litb":
+				return ec.fieldContext_weapon_litb(ctx, field)
+			case "holb":
+				return ec.fieldContext_weapon_holb(ctx, field)
+			case "bst":
+				return ec.fieldContext_weapon_bst(ctx, field)
+			case "Rst":
+				return ec.fieldContext_weapon_Rst(ctx, field)
+			case "wgt":
+				return ec.fieldContext_weapon_wgt(ctx, field)
+			case "upgrade":
+				return ec.fieldContext_weapon_upgrade(ctx, field)
+			case "id":
+				return ec.fieldContext_weapon_id(ctx, field)
+			case "custom":
+				return ec.fieldContext_weapon_custom(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type weapon", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_deleteWeapon_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return
 	}
@@ -1127,6 +1438,112 @@ func (ec *executionContext) fieldContext_Query_WeaponsByCustom(ctx context.Conte
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Query_WeaponsByCustom_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Query_WeaponById(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_WeaponById(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().WeaponByID(rctx, fc.Args["id"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.Weapon)
+	fc.Result = res
+	return ec.marshalOweapon2ᚖgithubᚗcomᚋkamsandhu93ᚋgqldenringᚋgraphᚋmodelᚐWeapon(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Query_WeaponById(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "name":
+				return ec.fieldContext_weapon_name(ctx, field)
+			case "type":
+				return ec.fieldContext_weapon_type(ctx, field)
+			case "phy":
+				return ec.fieldContext_weapon_phy(ctx, field)
+			case "mag":
+				return ec.fieldContext_weapon_mag(ctx, field)
+			case "fir":
+				return ec.fieldContext_weapon_fir(ctx, field)
+			case "lit":
+				return ec.fieldContext_weapon_lit(ctx, field)
+			case "hol":
+				return ec.fieldContext_weapon_hol(ctx, field)
+			case "cri":
+				return ec.fieldContext_weapon_cri(ctx, field)
+			case "sta":
+				return ec.fieldContext_weapon_sta(ctx, field)
+			case "str":
+				return ec.fieldContext_weapon_str(ctx, field)
+			case "dex":
+				return ec.fieldContext_weapon_dex(ctx, field)
+			case "int":
+				return ec.fieldContext_weapon_int(ctx, field)
+			case "fai":
+				return ec.fieldContext_weapon_fai(ctx, field)
+			case "arc":
+				return ec.fieldContext_weapon_arc(ctx, field)
+			case "any":
+				return ec.fieldContext_weapon_any(ctx, field)
+			case "phyb":
+				return ec.fieldContext_weapon_phyb(ctx, field)
+			case "magb":
+				return ec.fieldContext_weapon_magb(ctx, field)
+			case "firb":
+				return ec.fieldContext_weapon_firb(ctx, field)
+			case "litb":
+				return ec.fieldContext_weapon_litb(ctx, field)
+			case "holb":
+				return ec.fieldContext_weapon_holb(ctx, field)
+			case "bst":
+				return ec.fieldContext_weapon_bst(ctx, field)
+			case "Rst":
+				return ec.fieldContext_weapon_Rst(ctx, field)
+			case "wgt":
+				return ec.fieldContext_weapon_wgt(ctx, field)
+			case "upgrade":
+				return ec.fieldContext_weapon_upgrade(ctx, field)
+			case "id":
+				return ec.fieldContext_weapon_id(ctx, field)
+			case "custom":
+				return ec.fieldContext_weapon_custom(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type weapon", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Query_WeaponById_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return
 	}
@@ -4235,6 +4652,18 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 				return ec._Mutation_createWeapon(ctx, field)
 			})
 
+		case "updateWeapon":
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_updateWeapon(ctx, field)
+			})
+
+		case "deleteWeapon":
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_deleteWeapon(ctx, field)
+			})
+
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -4341,6 +4770,26 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
+			})
+		case "WeaponById":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_WeaponById(ctx, field)
 				return res
 			}
 
@@ -5305,6 +5754,22 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 		return graphql.Null
 	}
 	res := graphql.MarshalBoolean(*v)
+	return res
+}
+
+func (ec *executionContext) unmarshalOID2ᚖstring(ctx context.Context, v interface{}) (*string, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := graphql.UnmarshalID(v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOID2ᚖstring(ctx context.Context, sel ast.SelectionSet, v *string) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	res := graphql.MarshalID(*v)
 	return res
 }
 

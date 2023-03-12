@@ -36,10 +36,13 @@ type Query {
   weaponByName(name: String!): weapon
   weaponsByAttributeScaling(attribute: Attributes!, scale: AttributeScales!): [weapon]
   WeaponsByCustom(custom: Boolean!): [weapon!]!
+  WeaponById(id: ID!): weapon
 }
 
 type Mutation {
   createWeapon(input: newWeapon): weapon
+  updateWeapon(id: ID, input: newWeapon): weapon
+  deleteWeapon(id: ID): weapon
 }
 
 enum Attributes {
