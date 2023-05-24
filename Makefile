@@ -8,7 +8,7 @@ fmt:
 	go fmt ./...
 
 up:
-	docker compose up -d --build
+	docker compose --project-name gqldenring up -d --build
 
 down:
 	docker compose down
