@@ -32,7 +32,7 @@ func (r *queryResolver) Weapons(ctx context.Context) ([]*model.Weapon, error) {
 func (r *queryResolver) WeaponByName(ctx context.Context, name string) (*model.Weapon, error) {
 	weapons := db.Database()
 	for _, weapon := range weapons {
-		if strings.ToLower(weapon.Name) == strings.ToLower(name) {
+		if strings.EqualFold(weapon.Name, strings.ToLower(name)) {
 			return weapon, nil
 		}
 	}
@@ -59,7 +59,7 @@ func (r *queryResolver) WeaponsByAttributeScaling(ctx context.Context, attribute
 			atrScale = "Unknown"
 		}
 
-		if strings.ToUpper(string(atrScale)) == strings.ToUpper(string(scale)) {
+		if strings.EqualFold(strings.ToUpper(string(atrScale)), strings.ToUpper(string(scale))) {
 			results = append(results, weapon)
 		}
 	}
@@ -80,7 +80,7 @@ func (r *queryResolver) WeaponsByCustom(ctx context.Context, custom bool) ([]*mo
 func (r *queryResolver) WeaponByID(ctx context.Context, id string) (*model.Weapon, error) {
 	weapons := db.Database()
 	for _, weapon := range weapons {
-		if strings.ToLower(weapon.ID) == strings.ToLower(id) {
+		if strings.EqualFold(strings.ToLower(weapon.ID), strings.ToLower(id)) {
 			return weapon, nil
 		}
 	}
