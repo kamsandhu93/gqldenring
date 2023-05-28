@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/dgryski/trifles/uuid"
 	"github.com/kamsandhu93/gqldenring/graph/model"
+	"log"
 	"strconv"
 	"strings"
 	"sync"
@@ -42,7 +43,7 @@ func NewWeapon(weapon *model.NewWeapon) (*model.Weapon, error) {
 	mu.Lock()
 	defer mu.Unlock()
 	db = append(db, newWeapon)
-	fmt.Printf("[INFO] Created weapon with ID %s", newWeapon.ID)
+	log.Printf("[INFO] Created weapon with ID %s", newWeapon.ID)
 	return newWeapon, nil
 }
 
@@ -60,7 +61,7 @@ func UpdateWeapon(id string, weapon *model.NewWeapon) (*model.Weapon, error) {
 			break
 		}
 	}
-	fmt.Printf("[INFO] Updated weapon with ID %s", newWeapon.ID)
+	log.Printf("[INFO] Updated weapon with ID %s", newWeapon.ID)
 
 	return newWeapon, nil
 }
@@ -77,7 +78,7 @@ func DeleteWeapon(id string) (*model.Weapon, error) {
 			break
 		}
 	}
-	fmt.Printf("[INFO] Deleted weapon with ID %s", delwep.ID)
+	log.Printf("[INFO] Deleted weapon with ID %s", delwep.ID)
 
 	return delwep, nil
 }
@@ -160,6 +161,4 @@ func atrScaleFromStr(atrScale string) model.AttributeScales {
 	default:
 		return model.AttributeScales_
 	}
-
-	panic("Shouldnt get here")
 }

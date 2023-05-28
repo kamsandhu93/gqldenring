@@ -1,10 +1,14 @@
 package main
 
 import (
+	"context"
+	"github.com/99designs/gqlgen/graphql"
 	"io"
 	"log"
 	"net/http"
 	"os"
+	"strings"
+	"time"
 
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
@@ -20,10 +24,17 @@ func main() {
 		port = defaultPort
 	}
 
-	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &graph.Resolver{}}))
+	log.SetFlags(log.Ldate | log.Ltime | log.Llongfile)
 
-	http.Handle("/", playground.Handler("GraphQL playground", "/query"))
-	http.Handle("/query", srv)
+	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &graph.Resolver{}}))
+	srv.AroundOperations(func(ctx context.Context, next graphql.OperationHandler) graphql.ResponseHandler {
+		oc := graphql.GetOperationContext(ctx)
+		log.Printf("[INFO] Incoming operation: %s %s", oc.OperationName, strings.Replace(oc.RawQuery, "\n", " ", -1))
+		return next(ctx)
+	})
+
+	http.Handle("/", withLogging(playground.Handler("GraphQL playground", "/query")))
+	http.Handle("/query", withLogging(srv))
 	http.HandleFunc("/health", func(writer http.ResponseWriter, request *http.Request) {
 		_, err := io.WriteString(writer, "okay\n")
 		if err != nil {
@@ -33,4 +44,18 @@ func main() {
 
 	log.Printf("connect to http://localhost:%s/ for GraphQL playground", port)
 	log.Fatal(http.ListenAndServe(":"+port, nil))
+}
+
+func withLogging(h http.Handler) http.Handler {
+	logFn := func(rw http.ResponseWriter, r *http.Request) {
+		start := time.Now()
+
+		uri := r.RequestURI
+		method := r.Method
+		h.ServeHTTP(rw, r) // serve the original request
+
+		duration := time.Since(start)
+		log.Printf("%s %s %s", uri, method, duration)
+	}
+	return http.HandlerFunc(logFn)
 }
