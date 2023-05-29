@@ -18,6 +18,12 @@ import (
 
 const defaultPort = "8080"
 
+var (
+	version = "dev"
+	commit  = "none"
+	date    = "unknown"
+)
+
 func main() {
 	port := os.Getenv("PORT")
 	if port == "" {
@@ -42,7 +48,8 @@ func main() {
 		}
 	})
 
-	log.Printf("connect to http://localhost:%s/ for GraphQL playground", port)
+	log.Printf("Starting server version=%s commit=%s date=%s connect to http://localhost:%s/ for GraphQL playground",
+		version, commit, date, port)
 	log.Fatal(http.ListenAndServe(":"+port, nil))
 }
 
