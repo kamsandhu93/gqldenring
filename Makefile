@@ -18,3 +18,6 @@ logs:
 
 lint:
 	PWD=$(pwd) docker run -t --rm -v ${PWD}:/app -w /app golangci/golangci-lint:latest-alpine golangci-lint run -v
+
+release-snapshot:
+	goreleaser release --snapshot --clean
