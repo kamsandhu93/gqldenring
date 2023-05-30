@@ -9,7 +9,7 @@ import (
 	"sync"
 
 	"github.com/dgryski/trifles/uuid"
-	"github.com/kamsandhu93/gqldenring/graph/model"
+	"github.com/kamsandhu93/gqldenring/model"
 )
 
 var (

@@ -10,7 +10,7 @@ import (
 
 	"github.com/kamsandhu93/gqldenring/db"
 	"github.com/kamsandhu93/gqldenring/graph/generated"
-	"github.com/kamsandhu93/gqldenring/graph/model"
+	"github.com/kamsandhu93/gqldenring/model"
 )
 
 // CreateWeapon is the resolver for the createWeapon field.
