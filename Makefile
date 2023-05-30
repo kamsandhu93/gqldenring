@@ -43,7 +43,7 @@ check-git-diff:
 	git diff --compact-summary --exit-code
 
 # Requires all edits to be staged e.g. git add .
-ci-checks: fmt tidy lint build test
+ci-checks: fmt tidy lint build test vet
 	make check-git-diff || \
         (echo; echo "Unexpected difference in directories after code goimports and go mod tidy. Run the 'make fmt' and 'make tidy' commands then commit."; exit 1)
 	@echo "All checks passed \U0001F44D"
