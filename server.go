@@ -2,13 +2,14 @@ package main
 
 import (
 	"context"
-	"github.com/99designs/gqlgen/graphql"
 	"io"
 	"log"
 	"net/http"
 	"os"
 	"strings"
 	"time"
+
+	"github.com/99designs/gqlgen/graphql"
 
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"

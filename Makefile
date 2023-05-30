@@ -5,7 +5,13 @@ run:
 	go run server.go
 
 fmt:
-	go fmt ./...
+	goimports -w .
+
+install-goimports:
+	go install golang.org/x/tools/cmd/goimports@latest
+
+tidy:
+	go mod tidy
 
 up:
 	docker compose --project-name gqldenring up -d --build
@@ -21,3 +27,6 @@ lint:
 
 release-snapshot:
 	goreleaser release --snapshot --clean
+
+vet:
+	go vet

@@ -30,6 +30,16 @@ jobs:
           go-version-file: 'go.mod'
           cache: true
       - run: go mod download
+      - name: Run go mod tidy
+        run: make tidy
+      - name: Install Go Imports
+        run: make install-goimports
+      - name: Run Goimports
+        run: make fmt
+      - name: Verify no changes from goimports and go mod tidy.
+        run: |
+          git diff --compact-summary --exit-code || \
+            (echo; echo "Unexpected difference in directories after code goimports and go mod tidy. Run the 'make fmt' and 'make tidy' commands then commit."; exit 1)
       - run: go build -v .
       - run: go test ./...
       - name: Run linters

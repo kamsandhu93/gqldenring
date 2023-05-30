@@ -3,12 +3,13 @@ package db
 import (
 	_ "embed"
 	"fmt"
-	"github.com/dgryski/trifles/uuid"
-	"github.com/kamsandhu93/gqldenring/graph/model"
 	"log"
 	"strconv"
 	"strings"
 	"sync"
+
+	"github.com/dgryski/trifles/uuid"
+	"github.com/kamsandhu93/gqldenring/graph/model"
 )
 
 var (
