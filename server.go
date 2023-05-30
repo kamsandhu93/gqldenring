@@ -14,6 +14,7 @@ import (
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
 	memDB "github.com/kamsandhu93/gqldenring/db/memory"
+	sqlDB "github.com/kamsandhu93/gqldenring/db/sql"
 	"github.com/kamsandhu93/gqldenring/graph"
 	"github.com/kamsandhu93/gqldenring/graph/generated"
 )
@@ -27,14 +28,23 @@ var (
 )
 
 func main() {
+	log.SetFlags(log.Ldate | log.Ltime | log.Llongfile)
+
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = defaultPort
 	}
 
-	log.SetFlags(log.Ldate | log.Ltime | log.Llongfile)
+	sqlConn := os.Getenv("SQL_CONN")
+	var db graph.DB
+	if sqlConn != "" {
+		log.Printf("[INFO] Using sql db sqlConn=%s", sqlConn)
+		db = sqlDB.NewDB(sqlConn)
+	} else {
+		log.Print("[INFO] Using in memory db")
+		db = memDB.NewDB()
+	}
 
-	db := memDB.NewDB()
 	resolver := graph.NewResolver(db)
 
 	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: resolver}))

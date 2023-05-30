@@ -12,7 +12,7 @@ import (
 //
 // It serves as dependency injection for your app, add any dependencies you require here.
 
-type db interface {
+type DB interface {
 	NewWeapon(ctx context.Context, weapon *model.NewWeapon) (*model.Weapon, error)
 	UpdateWeapon(ctx context.Context, id string, weapon *model.NewWeapon) (*model.Weapon, error)
 	DeleteWeapon(ctx context.Context, id string) (*model.Weapon, error)
@@ -20,10 +20,10 @@ type db interface {
 }
 
 type Resolver struct {
-	db db
+	db DB
 }
 
-func NewResolver(db db) *Resolver {
+func NewResolver(db DB) *Resolver {
 	return &Resolver{
 		db: db,
 	}
