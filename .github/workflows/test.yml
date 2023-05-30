@@ -38,10 +38,12 @@ jobs:
         run: make fmt
       - name: Verify no changes from goimports and go mod tidy.
         run: |
-          git diff --compact-summary --exit-code || \
+          make check-git-diff || \
             (echo; echo "Unexpected difference in directories after code goimports and go mod tidy. Run the 'make fmt' and 'make tidy' commands then commit."; exit 1)
-      - run: go build -v .
-      - run: go test ./...
+      - name: Run build
+        run: make build
+      - name: Run unit tests
+        run: make test
       - name: Run linters
         uses: golangci/golangci-lint-action@08e2f20817b15149a52b5b3ebe7de50aff2ba8c5 # v3.4.0
         with:
