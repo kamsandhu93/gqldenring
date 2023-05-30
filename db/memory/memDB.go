@@ -1,6 +1,7 @@
 package memDB
 
 import (
+	"context"
 	_ "embed"
 	"fmt"
 	"log"
@@ -40,13 +41,13 @@ func (db *db) Printdb() {
 	}
 }
 
-func (db *db) Database() []*model.Weapon {
+func (db *db) Database(ctx context.Context) []*model.Weapon {
 	db.mu.RLock()
 	defer db.mu.RUnlock()
 	return db.data
 }
 
-func (db *db) NewWeapon(weapon *model.NewWeapon) (*model.Weapon, error) {
+func (db *db) NewWeapon(ctx context.Context, weapon *model.NewWeapon) (*model.Weapon, error) {
 	newWeapon := &model.Weapon{
 		Name:   weapon.Name,
 		Custom: true,
@@ -59,7 +60,7 @@ func (db *db) NewWeapon(weapon *model.NewWeapon) (*model.Weapon, error) {
 	return newWeapon, nil
 }
 
-func (db *db) UpdateWeapon(id string, weapon *model.NewWeapon) (*model.Weapon, error) {
+func (db *db) UpdateWeapon(ctx context.Context, id string, weapon *model.NewWeapon) (*model.Weapon, error) {
 	newWeapon := &model.Weapon{
 		Name:   weapon.Name,
 		Custom: true,
@@ -78,7 +79,7 @@ func (db *db) UpdateWeapon(id string, weapon *model.NewWeapon) (*model.Weapon, e
 	return newWeapon, nil
 }
 
-func (db *db) DeleteWeapon(id string) (*model.Weapon, error) {
+func (db *db) DeleteWeapon(ctx context.Context, id string) (*model.Weapon, error) {
 	db.mu.Lock()
 	var delwep *model.Weapon
 	defer db.mu.Unlock()

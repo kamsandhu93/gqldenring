@@ -1,6 +1,10 @@
 package graph
 
-import "github.com/kamsandhu93/gqldenring/model"
+import (
+	"context"
+
+	"github.com/kamsandhu93/gqldenring/model"
+)
 
 //go:generate go run github.com/99designs/gqlgen generate
 
@@ -9,10 +13,10 @@ import "github.com/kamsandhu93/gqldenring/model"
 // It serves as dependency injection for your app, add any dependencies you require here.
 
 type db interface {
-	NewWeapon(weapon *model.NewWeapon) (*model.Weapon, error)
-	UpdateWeapon(id string, weapon *model.NewWeapon) (*model.Weapon, error)
-	DeleteWeapon(id string) (*model.Weapon, error)
-	Database() []*model.Weapon
+	NewWeapon(ctx context.Context, weapon *model.NewWeapon) (*model.Weapon, error)
+	UpdateWeapon(ctx context.Context, id string, weapon *model.NewWeapon) (*model.Weapon, error)
+	DeleteWeapon(ctx context.Context, id string) (*model.Weapon, error)
+	Database(ctx context.Context) []*model.Weapon
 }
 
 type Resolver struct {

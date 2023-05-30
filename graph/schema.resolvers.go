@@ -14,28 +14,28 @@ import (
 
 // CreateWeapon is the resolver for the createWeapon field.
 func (r *mutationResolver) CreateWeapon(ctx context.Context, input *model.NewWeapon) (*model.Weapon, error) {
-	return r.db.NewWeapon(input)
+	return r.db.NewWeapon(ctx, input)
 }
 
 // UpdateWeapon is the resolver for the updateWeapon field.
 func (r *mutationResolver) UpdateWeapon(ctx context.Context, id *string, input *model.NewWeapon) (*model.Weapon, error) {
-	return r.db.UpdateWeapon(*id, input)
+	return r.db.UpdateWeapon(ctx, *id, input)
 }
 
 // DeleteWeapon is the resolver for the deleteWeapon field.
 func (r *mutationResolver) DeleteWeapon(ctx context.Context, id *string) (*model.Weapon, error) {
-	return r.db.DeleteWeapon(*id)
+	return r.db.DeleteWeapon(ctx, *id)
 }
 
 // Weapons is the resolver for the weapons field.
 func (r *queryResolver) Weapons(ctx context.Context) ([]*model.Weapon, error) {
-	weapons := r.db.Database()
+	weapons := r.db.Database(ctx)
 	return weapons, nil
 }
 
 // WeaponByName is the resolver for the weaponByName field.
 func (r *queryResolver) WeaponByName(ctx context.Context, name string) (*model.Weapon, error) {
-	weapons := r.db.Database()
+	weapons := r.db.Database(ctx)
 	for _, weapon := range weapons {
 		if strings.EqualFold(weapon.Name, strings.ToLower(name)) {
 			return weapon, nil
@@ -46,7 +46,7 @@ func (r *queryResolver) WeaponByName(ctx context.Context, name string) (*model.W
 
 // WeaponsByAttributeScaling is the resolver for the weaponsByAttributeScaling field.
 func (r *queryResolver) WeaponsByAttributeScaling(ctx context.Context, attribute model.Attributes, scale model.AttributeScales) ([]*model.Weapon, error) {
-	weapons := r.db.Database()
+	weapons := r.db.Database(ctx)
 	results := []*model.Weapon{}
 	var atrScale model.AttributeScales
 	for _, weapon := range weapons {
@@ -74,7 +74,7 @@ func (r *queryResolver) WeaponsByAttributeScaling(ctx context.Context, attribute
 
 // WeaponsByCustom is the resolver for the WeaponsByCustom field.
 func (r *queryResolver) WeaponsByCustom(ctx context.Context, custom bool) ([]*model.Weapon, error) {
-	weapons := r.db.Database()
+	weapons := r.db.Database(ctx)
 	results := []*model.Weapon{}
 	for _, weapon := range weapons {
 		if weapon.Custom == custom {
@@ -86,7 +86,7 @@ func (r *queryResolver) WeaponsByCustom(ctx context.Context, custom bool) ([]*mo
 
 // WeaponByID is the resolver for the WeaponById field.
 func (r *queryResolver) WeaponByID(ctx context.Context, id string) (*model.Weapon, error) {
-	weapons := r.db.Database()
+	weapons := r.db.Database(ctx)
 	for _, weapon := range weapons {
 		if strings.EqualFold(strings.ToLower(weapon.ID), strings.ToLower(id)) {
 			return weapon, nil
