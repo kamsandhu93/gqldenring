@@ -1,4 +1,4 @@
-package db
+package memDB
 
 import (
 	_ "embed"
@@ -14,51 +14,62 @@ import (
 
 var (
 	//go:embed elden_ring_weapon.csv
-	csv string
-	db  []*model.Weapon
-	mu  sync.RWMutex
+	csv    string
+	dbSeed []*model.Weapon
 )
 
 func init() {
-	db = parseCsv()
+	dbSeed = parseCsv()
 }
 
-func Printdb() {
-	for _, weapon := range db {
+type db struct {
+	data []*model.Weapon
+	mu   sync.RWMutex
+}
+
+func NewDB() *db {
+	return &db{
+		data: dbSeed,
+		mu:   sync.RWMutex{},
+	}
+}
+
+func (db *db) Printdb() {
+	for _, weapon := range db.data {
 		fmt.Println(*weapon)
 	}
 }
 
-func Database() []*model.Weapon {
-	mu.RLock()
-	defer mu.RUnlock()
-	return db
+func (db *db) Database() []*model.Weapon {
+	db.mu.RLock()
+	defer db.mu.RUnlock()
+	return db.data
 }
 
-func NewWeapon(weapon *model.NewWeapon) (*model.Weapon, error) {
+func (db *db) NewWeapon(weapon *model.NewWeapon) (*model.Weapon, error) {
 	newWeapon := &model.Weapon{
 		Name:   weapon.Name,
 		Custom: true,
 		ID:     uuid.UUIDv4(),
 	}
-	mu.Lock()
-	defer mu.Unlock()
-	db = append(db, newWeapon)
+	db.mu.Lock()
+	defer db.mu.Unlock()
+	db.data = append(db.data, newWeapon)
 	log.Printf("[INFO] Created weapon with ID %s", newWeapon.ID)
 	return newWeapon, nil
 }
 
-func UpdateWeapon(id string, weapon *model.NewWeapon) (*model.Weapon, error) {
+func (db *db) UpdateWeapon(id string, weapon *model.NewWeapon) (*model.Weapon, error) {
 	newWeapon := &model.Weapon{
 		Name:   weapon.Name,
 		Custom: true,
 		ID:     id,
 	}
-	mu.Lock()
-	defer mu.Unlock()
-	for i, weapon := range db {
+	db.mu.Lock()
+	defer db.mu.Unlock()
+	for i, weapon := range db.data {
 		if weapon.ID == id {
-			db[i] = newWeapon
+			db.data[i] = newWeapon
 			break
 		}
 	}
@@ -67,14 +78,14 @@ func UpdateWeapon(id string, weapon *model.NewWeapon) (*model.Weapon, error) {
 	return newWeapon, nil
 }
 
-func DeleteWeapon(id string) (*model.Weapon, error) {
-	mu.Lock()
+func (db *db) DeleteWeapon(id string) (*model.Weapon, error) {
+	db.mu.Lock()
 	var delwep *model.Weapon
-	defer mu.Unlock()
-	for i, weapon := range db {
+	defer db.mu.Unlock()
+	for i, weapon := range db.data {
 		if weapon.ID == id {
-			db[i] = db[len(db)-1]
-			db = db[:len(db)-1]
+			db.data[i] = db.data[len(db.data)-1]
+			db.data = db.data[:len(db.data)-1]
 			delwep = weapon
 			break
 		}

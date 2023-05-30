@@ -13,6 +13,7 @@ import (
 
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
+	memDB "github.com/kamsandhu93/gqldenring/db/memory"
 	"github.com/kamsandhu93/gqldenring/graph"
 	"github.com/kamsandhu93/gqldenring/graph/generated"
 )
@@ -33,7 +34,10 @@ func main() {
 
 	log.SetFlags(log.Ldate | log.Ltime | log.Llongfile)
 
-	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &graph.Resolver{}}))
+	db := memDB.NewDB()
+	resolver := graph.NewResolver(db)
+
+	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: resolver}))
 	srv.AroundOperations(func(ctx context.Context, next graphql.OperationHandler) graphql.ResponseHandler {
 		oc := graphql.GetOperationContext(ctx)
 		log.Printf("[INFO] Incoming operation: %s %s", oc.OperationName, strings.Replace(oc.RawQuery, "\n", " ", -1))
@@ -63,7 +67,7 @@ func withLogging(h http.Handler) http.Handler {
 		h.ServeHTTP(rw, r) // serve the original request
 
 		duration := time.Since(start)
-		log.Printf("%s %s %s", uri, method, duration)
+		log.Printf("[INFO] Request complete %s %s %s", uri, method, duration)
 	}
 	return http.HandlerFunc(logFn)
 }
