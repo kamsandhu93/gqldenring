@@ -1,10 +1,14 @@
 SHELL := $(shell which bash)
+DOC_COM := docker compose --project-name gqldenring
 
 generate:
 	go generate ./...
 
 run:
 	go run server.go
+
+run-db:
+	SQL_CONN="root:qwerty@tcp(0.0.0.0:3306)/db" go run server.go
 
 fmt:
 	goimports -w .
@@ -16,13 +20,16 @@ tidy:
 	go mod tidy
 
 up:
-	docker compose --project-name gqldenring up -d --build
+	$(DOC_COM) up -d --build --wait
+
+up-db:
+	$(DOC_COM) up -d --wait db phpmyadmin
 
 down:
-	docker compose down
+	$(DOC_COM) down --remove-orphans
 
 logs:
-	docker compose logs -f
+	$(DOC_COM) logs -f
 
 lint:
 	PWD=$(pwd) docker run -t --rm -v ${PWD}:/app -w /app golangci/golangci-lint:latest-alpine golangci-lint run -v

@@ -12,6 +12,7 @@ services:
       - "internal"
     environment:
       PORT: "8080"
+      SQL_CONN: "root:qwerty@tcp(db:3306)/db"
 
   db:
     image: "mysql:8.0.33-oracle"
@@ -37,7 +38,7 @@ services:
       PMA_PASSWORD: "qwerty"
     ports:
       - "9090:80"
-    restart: "always"
+    restart: "on-failure"
     networks:
       - "internal"
 

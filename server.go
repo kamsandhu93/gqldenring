@@ -36,9 +36,10 @@ func main() {
 	}
 
 	sqlConn := os.Getenv("SQL_CONN")
+
 	var db graph.DB
 	if sqlConn != "" {
-		log.Printf("[INFO] Using sql db sqlConn=%s", sqlConn)
+		log.Print("[INFO] Using sql db")
 		db = sqlDB.NewDB(sqlConn)
 	} else {
 		log.Print("[INFO] Using in memory db")
