@@ -51,7 +51,7 @@ func main() {
 	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: resolver}))
 	srv.AroundOperations(func(ctx context.Context, next graphql.OperationHandler) graphql.ResponseHandler {
 		oc := graphql.GetOperationContext(ctx)
-		log.Printf("[INFO] Incoming operation: %s %s", oc.OperationName, strings.Replace(oc.RawQuery, "\n", " ", -1))
+		log.Printf("[INFO] Incoming operation: %s %s %s", oc.OperationName, oc.Variables, strings.Replace(oc.RawQuery, "\n", " ", -1))
 		return next(ctx)
 	})
 
