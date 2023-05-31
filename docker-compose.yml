@@ -24,7 +24,7 @@ services:
     networks:
       - "internal"
     volumes:
-      - "database_mysql:/var/lib/mysql"
+      - "./db/sql/weapons.sql:/docker-entrypoint-initdb.d/seed.sql"
 
   phpmyadmin:
     platform: linux/x86_64

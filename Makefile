@@ -55,3 +55,6 @@ ci-checks: fmt tidy lint build test vet
         (echo; echo "Unexpected difference in directories after code goimports and go mod tidy. Run the 'make fmt' and 'make tidy' commands then commit."; exit 1)
 	@echo "All checks passed \U0001F44D"
 
+seed-db:
+	docker exec gqldenring-db-1 bash -c "mysql -pqwerty db < /seed.sql"
+
