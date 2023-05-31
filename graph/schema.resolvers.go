@@ -6,36 +6,64 @@ package graph
 
 import (
 	"context"
+	"log"
 	"strings"
 
 	"github.com/kamsandhu93/gqldenring/graph/generated"
 	"github.com/kamsandhu93/gqldenring/model"
+	"github.com/vektah/gqlparser/v2/gqlerror"
 )
 
 // CreateWeapon is the resolver for the createWeapon field.
 func (r *mutationResolver) CreateWeapon(ctx context.Context, input *model.NewWeapon) (*model.Weapon, error) {
-	return r.db.NewWeapon(ctx, input)
+	weapon, err := r.db.NewWeapon(ctx, input)
+	if err != nil {
+		log.Printf("[ERROR] Error creating weapon %v", err)
+		return nil, gqlerror.Errorf("Internal Server Error")
+	}
+
+	return weapon, nil
 }
 
 // UpdateWeapon is the resolver for the updateWeapon field.
 func (r *mutationResolver) UpdateWeapon(ctx context.Context, id *string, input *model.NewWeapon) (*model.Weapon, error) {
-	return r.db.UpdateWeapon(ctx, *id, input)
+	weapon, err := r.db.UpdateWeapon(ctx, *id, input)
+	if err != nil {
+		log.Printf("[ERROR] Error creating weapon %v", err)
+		return nil, gqlerror.Errorf("Internal Server Error")
+	}
+
+	return weapon, nil
 }
 
 // DeleteWeapon is the resolver for the deleteWeapon field.
 func (r *mutationResolver) DeleteWeapon(ctx context.Context, id *string) (*model.Weapon, error) {
-	return r.db.DeleteWeapon(ctx, *id)
+	weapon, err := r.db.DeleteWeapon(ctx, *id)
+	if err != nil {
+		log.Printf("[ERROR] Error creating weapon %v", err)
+		return nil, gqlerror.Errorf("Internal Server Error")
+	}
+	return weapon, nil
 }
 
 // Weapons is the resolver for the weapons field.
 func (r *queryResolver) Weapons(ctx context.Context) ([]*model.Weapon, error) {
-	weapons := r.db.Database(ctx)
+	weapons, err := r.db.AllWeapons(ctx)
+	if err != nil {
+		log.Printf("[ERROR] Error retrieving weapons %v", err)
+		return nil, gqlerror.Errorf("Internal Server Error")
+	}
+
 	return weapons, nil
 }
 
 // WeaponByName is the resolver for the weaponByName field.
 func (r *queryResolver) WeaponByName(ctx context.Context, name string) (*model.Weapon, error) {
-	weapons := r.db.Database(ctx)
+	weapons, err := r.db.AllWeapons(ctx)
+	if err != nil {
+		log.Printf("[ERROR] Error retrieving weapons %v", err)
+		return nil, gqlerror.Errorf("Internal Server Error")
+	}
 	for _, weapon := range weapons {
 		if strings.EqualFold(weapon.Name, strings.ToLower(name)) {
 			return weapon, nil
@@ -46,7 +74,11 @@ func (r *queryResolver) WeaponByName(ctx context.Context, name string) (*model.W
 
 // WeaponsByAttributeScaling is the resolver for the weaponsByAttributeScaling field.
 func (r *queryResolver) WeaponsByAttributeScaling(ctx context.Context, attribute model.Attributes, scale model.AttributeScales) ([]*model.Weapon, error) {
-	weapons := r.db.Database(ctx)
+	weapons, err := r.db.AllWeapons(ctx)
+	if err != nil {
+		log.Printf("[ERROR] Error retrieving weapons %v", err)
+		return nil, gqlerror.Errorf("Internal Server Error")
+	}
 	results := []*model.Weapon{}
 	var atrScale model.AttributeScales
 	for _, weapon := range weapons {
@@ -74,7 +106,12 @@ func (r *queryResolver) WeaponsByAttributeScaling(ctx context.Context, attribute
 
 // WeaponsByCustom is the resolver for the WeaponsByCustom field.
 func (r *queryResolver) WeaponsByCustom(ctx context.Context, custom bool) ([]*model.Weapon, error) {
-	weapons := r.db.Database(ctx)
+	weapons, err := r.db.AllWeapons(ctx)
+	if err != nil {
+		log.Printf("[ERROR] Error retrieving weapons %v", err)
+		return nil, gqlerror.Errorf("Internal Server Error")
+	}
+
 	results := []*model.Weapon{}
 	for _, weapon := range weapons {
 		if weapon.Custom == custom {
@@ -86,7 +123,12 @@ func (r *queryResolver) WeaponsByCustom(ctx context.Context, custom bool) ([]*mo
 
 // WeaponByID is the resolver for the WeaponById field.
 func (r *queryResolver) WeaponByID(ctx context.Context, id string) (*model.Weapon, error) {
-	weapons := r.db.Database(ctx)
+	weapons, err := r.db.AllWeapons(ctx)
+	if err != nil {
+		log.Printf("[ERROR] Error retrieving weapons %v", err)
+		return nil, gqlerror.Errorf("Internal Server Error")
+	}
+
 	for _, weapon := range weapons {
 		if strings.EqualFold(strings.ToLower(weapon.ID), strings.ToLower(id)) {
 			return weapon, nil

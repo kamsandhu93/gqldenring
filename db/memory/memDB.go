@@ -41,10 +41,10 @@ func (db *db) Printdb() {
 	}
 }
 
-func (db *db) Database(ctx context.Context) []*model.Weapon {
+func (db *db) AllWeapons(ctx context.Context) ([]*model.Weapon, error) {
 	db.mu.RLock()
 	defer db.mu.RUnlock()
-	return db.data
+	return db.data, nil
 }
 
 func (db *db) NewWeapon(ctx context.Context, weapon *model.NewWeapon) (*model.Weapon, error) {

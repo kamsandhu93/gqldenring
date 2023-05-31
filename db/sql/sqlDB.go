@@ -38,14 +38,8 @@ func NewDB(sqlConn string) *db {
 	}
 }
 
-func (db *db) Database(ctx context.Context) []*model.Weapon {
-	results, err := dbQuery(db.db, "SELECT * FROM weapons WHERE Deleted=FALSE")
-	if err != nil {
-		// needs to be handled properly
-		log.Fatalf("Error %v", err)
-	}
-
-	return results
+func (db *db) AllWeapons(ctx context.Context) ([]*model.Weapon, error) {
+	return dbQuery(db.db, "SELECT * FROM weapons WHERE Deleted=FALSE")
 }
 
 func (db *db) NewWeapon(ctx context.Context, newWeapon *model.NewWeapon) (*model.Weapon, error) {

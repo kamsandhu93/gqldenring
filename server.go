@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/99designs/gqlgen/graphql"
+	"github.com/vektah/gqlparser/v2/gqlerror"
 
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
@@ -53,6 +54,11 @@ func main() {
 		oc := graphql.GetOperationContext(ctx)
 		log.Printf("[INFO] Incoming operation: %s %s %s", oc.OperationName, oc.Variables, strings.Replace(oc.RawQuery, "\n", " ", -1))
 		return next(ctx)
+	})
+	srv.SetRecoverFunc(func(ctx context.Context, err interface{}) error {
+		log.Printf("[ERROR] Panic caused by %v", err)
+
+		return gqlerror.Errorf("Internal server error!")
 	})
 
 	http.Handle("/", withLogging(playground.Handler("GraphQL playground", "/query")))

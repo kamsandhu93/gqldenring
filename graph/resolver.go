@@ -16,7 +16,7 @@ type DB interface {
 	NewWeapon(ctx context.Context, weapon *model.NewWeapon) (*model.Weapon, error)
 	UpdateWeapon(ctx context.Context, id string, weapon *model.NewWeapon) (*model.Weapon, error)
 	DeleteWeapon(ctx context.Context, id string) (*model.Weapon, error)
-	Database(ctx context.Context) []*model.Weapon
+	AllWeapons(ctx context.Context) ([]*model.Weapon, error)
 }
 
 type Resolver struct {
