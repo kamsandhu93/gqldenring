@@ -39,7 +39,7 @@ func NewDB(sqlConn string) *db {
 }
 
 func (db *db) Database(ctx context.Context) []*model.Weapon {
-	results, err := dbQuery(db.db, "select * from weapons")
+	results, err := dbQuery(db.db, "SELECT * FROM weapons WHERE Deleted=FALSE")
 	if err != nil {
 		// needs to be handled properly
 		log.Fatalf("Error %v", err)
@@ -99,7 +99,27 @@ func (db *db) UpdateWeapon(ctx context.Context, id string, newWeapon *model.NewW
 }
 
 func (db *db) DeleteWeapon(ctx context.Context, id string) (*model.Weapon, error) {
-	return &model.Weapon{}, nil
+	res, err := db.db.Exec("UPDATE weapons SET Deleted=TRUE WHERE id=?", id)
+
+	if err != nil {
+		log.Printf("[ERROR] soft deleting row %v", err)
+		return nil, err
+	}
+
+	rowCnt, err := res.RowsAffected()
+	if err != nil {
+		log.Printf("[ERROR] getting row count  %v", err)
+		return nil, err
+	}
+	log.Printf("[INFO] db delete ID = %s, affected = %d\n", id, rowCnt)
+
+	weapons, err := dbQuery(db.db, "SELECT * FROM weapons WHERE id = ?", id)
+	if err != nil {
+		log.Printf("[ERROR] Retrieving weapons details %v", err)
+		return nil, err
+	}
+
+	return weapons[0], nil
 }
 
 func dbQuery(db *sql.DB, query string, values ...any) ([]*model.Weapon, error) {
@@ -120,11 +140,12 @@ func dbQuery(db *sql.DB, query string, values ...any) ([]*model.Weapon, error) {
 	for rows.Next() {
 		var weapon model.Weapon
 		var lastUpdated string
+		var deleted bool
 		err := rows.Scan(&weapon.Name, &weapon.Type, &weapon.Phy, &weapon.Mag, &weapon.Fir, &weapon.Lit, &weapon.Hol,
 			&weapon.Cri, &weapon.Sta, &weapon.Str, &weapon.Dex, &weapon.Int, &weapon.Fai,
 			&weapon.Arc, &weapon.Any, &weapon.Phyb, &weapon.Magb, &weapon.Firb, &weapon.Litb, &weapon.Holb,
 			&weapon.Bst, &weapon.Rst, &weapon.Wgt, &weapon.Upgrade, &weapon.Custom, &weapon.ID,
-			&lastUpdated)
+			&lastUpdated, &deleted)
 
 		if err != nil {
 			log.Printf("[ERROR] Error scanning rows %v", err)
