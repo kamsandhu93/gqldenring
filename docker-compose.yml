@@ -26,6 +26,7 @@ services:
       - "database_mysql:/var/lib/mysql"
 
   phpmyadmin:
+    platform: linux/x86_64
     image: "phpmyadmin/phpmyadmin"
     depends_on:
       - "db"
