@@ -163,20 +163,3 @@ func dbQuery(db *sql.DB, query string, values ...any) ([]*model.Weapon, error) {
 
 	return weapons, nil
 }
-
-func atrScaleFromStr(atrScale string) model.AttributeScales {
-	switch atrScale {
-	case "A":
-		return model.AttributeScalesA
-	case "B":
-		return model.AttributeScalesB
-	case "C":
-		return model.AttributeScalesC
-	case "D":
-		return model.AttributeScalesD
-	case "E":
-		return model.AttributeScalesE
-	default:
-		return model.AttributeScales_
-	}
-}
