@@ -49,17 +49,7 @@ func main() {
 
 	resolver := graph.NewResolver(db)
 
-	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: resolver}))
-	srv.AroundOperations(func(ctx context.Context, next graphql.OperationHandler) graphql.ResponseHandler {
-		oc := graphql.GetOperationContext(ctx)
-		log.Printf("[INFO] Incoming operation: %s %s %s", oc.OperationName, oc.Variables, strings.Replace(oc.RawQuery, "\n", " ", -1))
-		return next(ctx)
-	})
-	srv.SetRecoverFunc(func(ctx context.Context, err interface{}) error {
-		log.Printf("[ERROR] Panic caused by %v", err)
-
-		return gqlerror.Errorf("Internal server error!")
-	})
+	srv := newServer(resolver)
 
 	http.Handle("/", withLogging(playground.Handler("GraphQL playground", "/query")))
 	http.Handle("/query", withLogging(srv))
@@ -73,6 +63,21 @@ func main() {
 	log.Printf("Starting server version=%s commit=%s date=%s connect to http://localhost:%s/ for GraphQL playground",
 		version, commit, date, port)
 	log.Fatal(http.ListenAndServe(":"+port, nil))
+}
+
+func newServer(resolver *graph.Resolver) *handler.Server {
+	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: resolver}))
+	srv.AroundOperations(func(ctx context.Context, next graphql.OperationHandler) graphql.ResponseHandler {
+		oc := graphql.GetOperationContext(ctx)
+		log.Printf("[INFO] Incoming operation: %s %s %s", oc.OperationName, oc.Variables, strings.Replace(oc.RawQuery, "\n", " ", -1))
+		return next(ctx)
+	})
+	srv.SetRecoverFunc(func(ctx context.Context, err interface{}) error {
+		log.Printf("[ERROR] Panic caused by %v", err)
+
+		return gqlerror.Errorf("Internal server error!")
+	})
+	return srv
 }
 
 func withLogging(h http.Handler) http.Handler {
