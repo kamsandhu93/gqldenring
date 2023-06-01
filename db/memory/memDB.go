@@ -9,7 +9,6 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/dgryski/trifles/uuid"
 	"github.com/kamsandhu93/gqldenring/model"
 )
 
@@ -24,14 +23,16 @@ func init() {
 }
 
 type db struct {
-	data []*model.Weapon
-	mu   sync.RWMutex
+	data    []*model.Weapon
+	mu      sync.RWMutex
+	counter *counter
 }
 
 func NewDB() *db {
 	return &db{
-		data: dbSeed,
-		mu:   sync.RWMutex{},
+		data:    dbSeed,
+		mu:      sync.RWMutex{},
+		counter: newCounter(len(dbSeed)),
 	}
 }
 
@@ -48,13 +49,13 @@ func (db *db) AllWeapons(ctx context.Context) ([]*model.Weapon, error) {
 }
 
 func (db *db) NewWeapon(ctx context.Context, weapon *model.NewWeapon) (*model.Weapon, error) {
+	db.mu.Lock()
+	defer db.mu.Unlock()
 	newWeapon := &model.Weapon{
 		Name:   weapon.Name,
 		Custom: true,
-		ID:     uuid.UUIDv4(),
+		ID:     strconv.Itoa(db.counter.increment()),
 	}
-	db.mu.Lock()
-	defer db.mu.Unlock()
 	db.data = append(db.data, newWeapon)
 	log.Printf("[INFO] Created weapon with ID %s", newWeapon.ID)
 	return newWeapon, nil
@@ -138,7 +139,7 @@ func parseCsv() []*model.Weapon {
 			Wgt:     fields[22],
 			Upgrade: fields[23],
 			Custom:  false,
-			ID:      uuid.UUIDv4(),
+			ID:      strconv.Itoa(i),
 		}
 
 		parsed = append(parsed, &structure)
