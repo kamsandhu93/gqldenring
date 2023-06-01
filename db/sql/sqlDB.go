@@ -2,11 +2,9 @@ package sqlDB
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 	"log"
-	"strconv"
-
-	"database/sql"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/kamsandhu93/gqldenring/model"
@@ -60,11 +58,13 @@ func (db *db) NewWeapon(ctx context.Context, newWeapon *model.NewWeapon) (*model
 
 	}
 
-	return &model.Weapon{
-		Name:   newWeapon.Name,
-		ID:     strconv.FormatInt(lastId, 10),
-		Custom: true,
-	}, nil
+	weapons, err := dbQuery(db.db, "SELECT * FROM weapons WHERE id = ?", lastId)
+	if err != nil {
+		log.Printf("[ERROR] Retrieving weapons details %v", err)
+		return nil, err
+	}
+
+	return weapons[0], nil
 }
 
 func (db *db) UpdateWeapon(ctx context.Context, id string, newWeapon *model.NewWeapon) (*model.Weapon, error) {
@@ -133,13 +133,12 @@ func dbQuery(db *sql.DB, query string, values ...any) ([]*model.Weapon, error) {
 
 	for rows.Next() {
 		var weapon model.Weapon
-		var lastUpdated string
 		var deleted bool
 		err := rows.Scan(&weapon.Name, &weapon.Type, &weapon.Phy, &weapon.Mag, &weapon.Fir, &weapon.Lit, &weapon.Hol,
 			&weapon.Cri, &weapon.Sta, &weapon.Str, &weapon.Dex, &weapon.Int, &weapon.Fai,
 			&weapon.Arc, &weapon.Any, &weapon.Phyb, &weapon.Magb, &weapon.Firb, &weapon.Litb, &weapon.Holb,
 			&weapon.Bst, &weapon.Rst, &weapon.Wgt, &weapon.Upgrade, &weapon.Custom, &weapon.ID,
-			&lastUpdated, &deleted)
+			&weapon.LastUpdated, &deleted)
 
 		if err != nil {
 			log.Printf("[ERROR] Error scanning rows %v", err)

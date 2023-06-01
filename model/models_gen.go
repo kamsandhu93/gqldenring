@@ -13,32 +13,33 @@ type NewWeapon struct {
 }
 
 type Weapon struct {
-	Name    string          `json:"name"`
-	Type    string          `json:"type"`
-	Phy     int             `json:"phy"`
-	Mag     int             `json:"mag"`
-	Fir     int             `json:"fir"`
-	Lit     int             `json:"lit"`
-	Hol     int             `json:"hol"`
-	Cri     int             `json:"cri"`
-	Sta     int             `json:"sta"`
-	Str     AttributeScales `json:"str"`
-	Dex     AttributeScales `json:"dex"`
-	Int     AttributeScales `json:"int"`
-	Fai     AttributeScales `json:"fai"`
-	Arc     AttributeScales `json:"arc"`
-	Any     string          `json:"any"`
-	Phyb    int             `json:"phyb"`
-	Magb    int             `json:"magb"`
-	Firb    int             `json:"firb"`
-	Litb    int             `json:"litb"`
-	Holb    int             `json:"holb"`
-	Bst     string          `json:"bst"`
-	Rst     string          `json:"Rst"`
-	Wgt     string          `json:"wgt"`
-	Upgrade string          `json:"upgrade"`
-	ID      string          `json:"id"`
-	Custom  bool            `json:"custom"`
+	Name        string          `json:"name"`
+	Type        string          `json:"type"`
+	Phy         int             `json:"phy"`
+	Mag         int             `json:"mag"`
+	Fir         int             `json:"fir"`
+	Lit         int             `json:"lit"`
+	Hol         int             `json:"hol"`
+	Cri         int             `json:"cri"`
+	Sta         int             `json:"sta"`
+	Str         AttributeScales `json:"str"`
+	Dex         AttributeScales `json:"dex"`
+	Int         AttributeScales `json:"int"`
+	Fai         AttributeScales `json:"fai"`
+	Arc         AttributeScales `json:"arc"`
+	Any         string          `json:"any"`
+	Phyb        int             `json:"phyb"`
+	Magb        int             `json:"magb"`
+	Firb        int             `json:"firb"`
+	Litb        int             `json:"litb"`
+	Holb        int             `json:"holb"`
+	Bst         string          `json:"bst"`
+	Rst         string          `json:"Rst"`
+	Wgt         string          `json:"wgt"`
+	Upgrade     string          `json:"upgrade"`
+	ID          string          `json:"id"`
+	Custom      bool            `json:"custom"`
+	LastUpdated string          `json:"lastUpdated"`
 }
 
 type AttributeScales string

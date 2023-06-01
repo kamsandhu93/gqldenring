@@ -25,6 +25,7 @@ type weapon {
   upgrade: String!
   id: ID!
   custom: Boolean!
+  lastUpdated: String!
 }
 
 input newWeapon {

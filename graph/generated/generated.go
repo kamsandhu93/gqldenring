@@ -59,32 +59,33 @@ type ComplexityRoot struct {
 	}
 
 	Weapon struct {
-		Any     func(childComplexity int) int
-		Arc     func(childComplexity int) int
-		Bst     func(childComplexity int) int
-		Cri     func(childComplexity int) int
-		Custom  func(childComplexity int) int
-		Dex     func(childComplexity int) int
-		Fai     func(childComplexity int) int
-		Fir     func(childComplexity int) int
-		Firb    func(childComplexity int) int
-		Hol     func(childComplexity int) int
-		Holb    func(childComplexity int) int
-		ID      func(childComplexity int) int
-		Int     func(childComplexity int) int
-		Lit     func(childComplexity int) int
-		Litb    func(childComplexity int) int
-		Mag     func(childComplexity int) int
-		Magb    func(childComplexity int) int
-		Name    func(childComplexity int) int
-		Phy     func(childComplexity int) int
-		Phyb    func(childComplexity int) int
-		Rst     func(childComplexity int) int
-		Sta     func(childComplexity int) int
-		Str     func(childComplexity int) int
-		Type    func(childComplexity int) int
-		Upgrade func(childComplexity int) int
-		Wgt     func(childComplexity int) int
+		Any         func(childComplexity int) int
+		Arc         func(childComplexity int) int
+		Bst         func(childComplexity int) int
+		Cri         func(childComplexity int) int
+		Custom      func(childComplexity int) int
+		Dex         func(childComplexity int) int
+		Fai         func(childComplexity int) int
+		Fir         func(childComplexity int) int
+		Firb        func(childComplexity int) int
+		Hol         func(childComplexity int) int
+		Holb        func(childComplexity int) int
+		ID          func(childComplexity int) int
+		Int         func(childComplexity int) int
+		LastUpdated func(childComplexity int) int
+		Lit         func(childComplexity int) int
+		Litb        func(childComplexity int) int
+		Mag         func(childComplexity int) int
+		Magb        func(childComplexity int) int
+		Name        func(childComplexity int) int
+		Phy         func(childComplexity int) int
+		Phyb        func(childComplexity int) int
+		Rst         func(childComplexity int) int
+		Sta         func(childComplexity int) int
+		Str         func(childComplexity int) int
+		Type        func(childComplexity int) int
+		Upgrade     func(childComplexity int) int
+		Wgt         func(childComplexity int) int
 	}
 }
 
@@ -298,6 +299,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Weapon.Int(childComplexity), true
 
+	case "weapon.lastUpdated":
+		if e.complexity.Weapon.LastUpdated == nil {
+			break
+		}
+
+		return e.complexity.Weapon.LastUpdated(childComplexity), true
+
 	case "weapon.lit":
 		if e.complexity.Weapon.Lit == nil {
 			break
@@ -485,6 +493,7 @@ var sources = []*ast.Source{
   upgrade: String!
   id: ID!
   custom: Boolean!
+  lastUpdated: String!
 }
 
 input newWeapon {
@@ -795,6 +804,8 @@ func (ec *executionContext) fieldContext_Mutation_createWeapon(ctx context.Conte
 				return ec.fieldContext_weapon_id(ctx, field)
 			case "custom":
 				return ec.fieldContext_weapon_custom(ctx, field)
+			case "lastUpdated":
+				return ec.fieldContext_weapon_lastUpdated(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type weapon", field.Name)
 		},
@@ -901,6 +912,8 @@ func (ec *executionContext) fieldContext_Mutation_updateWeapon(ctx context.Conte
 				return ec.fieldContext_weapon_id(ctx, field)
 			case "custom":
 				return ec.fieldContext_weapon_custom(ctx, field)
+			case "lastUpdated":
+				return ec.fieldContext_weapon_lastUpdated(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type weapon", field.Name)
 		},
@@ -1007,6 +1020,8 @@ func (ec *executionContext) fieldContext_Mutation_deleteWeapon(ctx context.Conte
 				return ec.fieldContext_weapon_id(ctx, field)
 			case "custom":
 				return ec.fieldContext_weapon_custom(ctx, field)
+			case "lastUpdated":
+				return ec.fieldContext_weapon_lastUpdated(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type weapon", field.Name)
 		},
@@ -1116,6 +1131,8 @@ func (ec *executionContext) fieldContext_Query_weapons(ctx context.Context, fiel
 				return ec.fieldContext_weapon_id(ctx, field)
 			case "custom":
 				return ec.fieldContext_weapon_custom(ctx, field)
+			case "lastUpdated":
+				return ec.fieldContext_weapon_lastUpdated(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type weapon", field.Name)
 		},
@@ -1211,6 +1228,8 @@ func (ec *executionContext) fieldContext_Query_weaponByName(ctx context.Context,
 				return ec.fieldContext_weapon_id(ctx, field)
 			case "custom":
 				return ec.fieldContext_weapon_custom(ctx, field)
+			case "lastUpdated":
+				return ec.fieldContext_weapon_lastUpdated(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type weapon", field.Name)
 		},
@@ -1317,6 +1336,8 @@ func (ec *executionContext) fieldContext_Query_weaponsByAttributeScaling(ctx con
 				return ec.fieldContext_weapon_id(ctx, field)
 			case "custom":
 				return ec.fieldContext_weapon_custom(ctx, field)
+			case "lastUpdated":
+				return ec.fieldContext_weapon_lastUpdated(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type weapon", field.Name)
 		},
@@ -1426,6 +1447,8 @@ func (ec *executionContext) fieldContext_Query_WeaponsByCustom(ctx context.Conte
 				return ec.fieldContext_weapon_id(ctx, field)
 			case "custom":
 				return ec.fieldContext_weapon_custom(ctx, field)
+			case "lastUpdated":
+				return ec.fieldContext_weapon_lastUpdated(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type weapon", field.Name)
 		},
@@ -1532,6 +1555,8 @@ func (ec *executionContext) fieldContext_Query_WeaponById(ctx context.Context, f
 				return ec.fieldContext_weapon_id(ctx, field)
 			case "custom":
 				return ec.fieldContext_weapon_custom(ctx, field)
+			case "lastUpdated":
+				return ec.fieldContext_weapon_lastUpdated(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type weapon", field.Name)
 		},
@@ -4592,6 +4617,50 @@ func (ec *executionContext) fieldContext_weapon_custom(ctx context.Context, fiel
 	return fc, nil
 }
 
+func (ec *executionContext) _weapon_lastUpdated(ctx context.Context, field graphql.CollectedField, obj *model.Weapon) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_weapon_lastUpdated(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.LastUpdated, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_weapon_lastUpdated(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "weapon",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 // endregion **************************** field.gotpl *****************************
 
 // region    **************************** input.gotpl *****************************
@@ -5331,6 +5400,13 @@ func (ec *executionContext) _weapon(ctx context.Context, sel ast.SelectionSet, o
 		case "custom":
 
 			out.Values[i] = ec._weapon_custom(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "lastUpdated":
+
+			out.Values[i] = ec._weapon_lastUpdated(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
 				invalids++

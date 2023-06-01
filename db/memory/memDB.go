@@ -8,6 +8,7 @@ import (
 	"strconv"
 	"strings"
 	"sync"
+	"time"
 
 	"github.com/kamsandhu93/gqldenring/model"
 )
@@ -52,9 +53,10 @@ func (db *db) NewWeapon(ctx context.Context, weapon *model.NewWeapon) (*model.We
 	db.mu.Lock()
 	defer db.mu.Unlock()
 	newWeapon := &model.Weapon{
-		Name:   weapon.Name,
-		Custom: true,
-		ID:     strconv.Itoa(db.counter.increment()),
+		Name:        weapon.Name,
+		Custom:      true,
+		ID:          strconv.Itoa(db.counter.increment()),
+		LastUpdated: time.Now().Format(time.DateTime),
 	}
 	db.data = append(db.data, newWeapon)
 	log.Printf("[INFO] Created weapon with ID %s", newWeapon.ID)
@@ -63,9 +65,10 @@ func (db *db) NewWeapon(ctx context.Context, weapon *model.NewWeapon) (*model.We
 
 func (db *db) UpdateWeapon(ctx context.Context, id string, weapon *model.NewWeapon) (*model.Weapon, error) {
 	newWeapon := &model.Weapon{
-		Name:   weapon.Name,
-		Custom: true,
-		ID:     id,
+		Name:        weapon.Name,
+		Custom:      true,
+		ID:          id,
+		LastUpdated: time.Now().Format(time.DateTime),
 	}
 	db.mu.Lock()
 	defer db.mu.Unlock()
@@ -114,32 +117,33 @@ func parseCsv() []*model.Weapon {
 		fields := strings.Split(record, ",")
 
 		structure := model.Weapon{
-			Name:    fields[0],
-			Type:    fields[1],
-			Phy:     intFromStr(fields[2]),
-			Mag:     intFromStr(fields[3]),
-			Fir:     intFromStr(fields[4]),
-			Lit:     intFromStr(fields[5]),
-			Hol:     intFromStr(fields[6]),
-			Cri:     intFromStr(fields[7]),
-			Sta:     intFromStr(fields[8]),
-			Str:     atrScaleFromStr(fields[9]),
-			Dex:     atrScaleFromStr(fields[10]),
-			Int:     atrScaleFromStr(fields[11]),
-			Fai:     atrScaleFromStr(fields[12]),
-			Arc:     atrScaleFromStr(fields[13]),
-			Any:     fields[14],
-			Phyb:    intFromStr(fields[15]),
-			Magb:    intFromStr(fields[16]),
-			Firb:    intFromStr(fields[17]),
-			Litb:    intFromStr(fields[18]),
-			Holb:    intFromStr(fields[19]),
-			Bst:     fields[20],
-			Rst:     fields[21],
-			Wgt:     fields[22],
-			Upgrade: fields[23],
-			Custom:  false,
-			ID:      strconv.Itoa(i),
+			Name:        fields[0],
+			Type:        fields[1],
+			Phy:         intFromStr(fields[2]),
+			Mag:         intFromStr(fields[3]),
+			Fir:         intFromStr(fields[4]),
+			Lit:         intFromStr(fields[5]),
+			Hol:         intFromStr(fields[6]),
+			Cri:         intFromStr(fields[7]),
+			Sta:         intFromStr(fields[8]),
+			Str:         atrScaleFromStr(fields[9]),
+			Dex:         atrScaleFromStr(fields[10]),
+			Int:         atrScaleFromStr(fields[11]),
+			Fai:         atrScaleFromStr(fields[12]),
+			Arc:         atrScaleFromStr(fields[13]),
+			Any:         fields[14],
+			Phyb:        intFromStr(fields[15]),
+			Magb:        intFromStr(fields[16]),
+			Firb:        intFromStr(fields[17]),
+			Litb:        intFromStr(fields[18]),
+			Holb:        intFromStr(fields[19]),
+			Bst:         fields[20],
+			Rst:         fields[21],
+			Wgt:         fields[22],
+			Upgrade:     fields[23],
+			Custom:      false,
+			ID:          strconv.Itoa(i),
+			LastUpdated: time.Now().Format(time.DateTime),
 		}
 
 		parsed = append(parsed, &structure)
