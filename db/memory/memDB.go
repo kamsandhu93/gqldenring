@@ -4,12 +4,12 @@ import (
 	"context"
 	_ "embed"
 	"fmt"
-	"log"
 	"strconv"
 	"strings"
 	"sync"
 	"time"
 
+	"github.com/kamsandhu93/gqldenring/logger"
 	"github.com/kamsandhu93/gqldenring/model"
 )
 
@@ -59,7 +59,7 @@ func (db *db) NewWeapon(ctx context.Context, weapon *model.NewWeapon) (*model.We
 		LastUpdated: time.Now().Format(time.DateTime),
 	}
 	db.data = append(db.data, newWeapon)
-	log.Printf("[INFO] Created weapon with ID %s", newWeapon.ID)
+	logger.LogID(ctx, "[INFO] Created weapon with ID %s", newWeapon.ID)
 	return newWeapon, nil
 }
 
@@ -78,7 +78,7 @@ func (db *db) UpdateWeapon(ctx context.Context, id string, weapon *model.NewWeap
 			break
 		}
 	}
-	log.Printf("[INFO] Updated weapon with ID %s", newWeapon.ID)
+	logger.LogID(ctx, "[INFO] Updated weapon with ID %s", newWeapon.ID)
 
 	return newWeapon, nil
 }
@@ -95,7 +95,7 @@ func (db *db) DeleteWeapon(ctx context.Context, id string) (*model.Weapon, error
 			break
 		}
 	}
-	log.Printf("[INFO] Deleted weapon with ID %s", delwep.ID)
+	logger.LogID(ctx, "[INFO] Deleted weapon with ID %s", delwep.ID)
 
 	return delwep, nil
 }

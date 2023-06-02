@@ -15,7 +15,7 @@ import (
 func TestSrvInMemDB(t *testing.T) {
 
 	db := memDB.NewDB()
-	srv := newServer(graph.NewResolver(db))
+	srv := newHandler(graph.NewResolver(db))
 	c := client.New(srv)
 
 	runCrudChecks(t, c)
@@ -27,7 +27,7 @@ func TestSrvSqlDB(t *testing.T) {
 	}
 
 	db := sqlDB.NewDB("root:qwerty@tcp(0.0.0.0:3306)/db")
-	srv := newServer(graph.NewResolver(db))
+	srv := newHandler(graph.NewResolver(db))
 	c := client.New(srv)
 
 	runCrudChecks(t, c)

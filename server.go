@@ -6,10 +6,12 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"runtime/debug"
 	"strings"
-	"time"
 
 	"github.com/99designs/gqlgen/graphql"
+	"github.com/kamsandhu93/gqldenring/logger"
+	"github.com/kamsandhu93/gqldenring/middleware"
 	"github.com/vektah/gqlparser/v2/gqlerror"
 
 	"github.com/99designs/gqlgen/graphql/handler"
@@ -29,7 +31,7 @@ var (
 )
 
 func main() {
-	log.SetFlags(log.Ldate | log.Ltime | log.Llongfile)
+	log.SetFlags(log.Ldate | log.Ltime) //| log.Lshortfile)
 
 	port := os.Getenv("PORT")
 	if port == "" {
@@ -49,10 +51,10 @@ func main() {
 
 	resolver := graph.NewResolver(db)
 
-	srv := newServer(resolver)
+	h := newHandler(resolver)
 
-	http.Handle("/", withLogging(playground.Handler("GraphQL playground", "/query")))
-	http.Handle("/query", withLogging(srv))
+	http.Handle("/", middleware.WithReqID(logger.RequestIDKey, middleware.WithLogging(logger.LogID, playground.Handler("GraphQL playground", "/query"))))
+	http.Handle("/query", h)
 	http.HandleFunc("/health", func(writer http.ResponseWriter, request *http.Request) {
 		_, err := io.WriteString(writer, "okay\n")
 		if err != nil {
@@ -65,31 +67,22 @@ func main() {
 	log.Fatal(http.ListenAndServe(":"+port, nil))
 }
 
-func newServer(resolver *graph.Resolver) *handler.Server {
+func newHandler(resolver *graph.Resolver) http.Handler {
 	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: resolver}))
 	srv.AroundOperations(func(ctx context.Context, next graphql.OperationHandler) graphql.ResponseHandler {
 		oc := graphql.GetOperationContext(ctx)
-		log.Printf("[INFO] Incoming operation: %s %s %s", oc.OperationName, oc.Variables, strings.Replace(oc.RawQuery, "\n", " ", -1))
+		logger.LogID(ctx, "[INFO] Incoming operation: %s %s %s", oc.OperationName, oc.Variables, strings.Replace(oc.RawQuery, "\n", " ", -1))
 		return next(ctx)
 	})
 	srv.SetRecoverFunc(func(ctx context.Context, err interface{}) error {
-		log.Printf("[ERROR] Panic caused by %v", err)
-
+		logger.LogID(ctx, "[ERROR] Panic caused by %v", err)
+		debug.PrintStack()
 		return gqlerror.Errorf("Internal server error!")
 	})
-	return srv
-}
 
-func withLogging(h http.Handler) http.Handler {
-	logFn := func(rw http.ResponseWriter, r *http.Request) {
-		start := time.Now()
+	h := middleware.WithReqID(logger.RequestIDKey,
+		middleware.WithLogging(logger.LogID,
+			srv))
 
-		uri := r.RequestURI
-		method := r.Method
-		h.ServeHTTP(rw, r) // serve the original request
-
-		duration := time.Since(start)
-		log.Printf("[INFO] Request complete %s %s %s", uri, method, duration)
-	}
-	return http.HandlerFunc(logFn)
+	return h
 }
