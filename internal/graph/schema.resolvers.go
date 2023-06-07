@@ -18,7 +18,7 @@ import (
 func (r *mutationResolver) CreateWeapon(ctx context.Context, input *model.NewWeapon) (*model.Weapon, error) {
 	weapon, err := r.db.NewWeapon(ctx, input)
 	if err != nil {
-		logger.LogID(ctx, "[ERROR] Error creating weapon %v", err)
+		logger.Error(ctx, "Error creating weapon %v", err)
 		return nil, gqlerror.Errorf("Internal Server Error")
 	}
 
@@ -29,7 +29,7 @@ func (r *mutationResolver) CreateWeapon(ctx context.Context, input *model.NewWea
 func (r *mutationResolver) UpdateWeapon(ctx context.Context, id *string, input *model.NewWeapon) (*model.Weapon, error) {
 	weapon, err := r.db.UpdateWeapon(ctx, *id, input)
 	if err != nil {
-		logger.LogID(ctx, "[ERROR] Error creating weapon %v", err)
+		logger.Error(ctx, "Error creating weapon %v", err)
 		return nil, gqlerror.Errorf("Internal Server Error")
 	}
 
@@ -40,7 +40,7 @@ func (r *mutationResolver) UpdateWeapon(ctx context.Context, id *string, input *
 func (r *mutationResolver) DeleteWeapon(ctx context.Context, id *string) (*model.Weapon, error) {
 	weapon, err := r.db.DeleteWeapon(ctx, *id)
 	if err != nil {
-		logger.LogID(ctx, "[ERROR] Error creating weapon %v", err)
+		logger.Error(ctx, "Error creating weapon %v", err)
 		return nil, gqlerror.Errorf("Internal Server Error")
 	}
 	return weapon, nil
@@ -50,7 +50,7 @@ func (r *mutationResolver) DeleteWeapon(ctx context.Context, id *string) (*model
 func (r *queryResolver) Weapons(ctx context.Context) ([]*model.Weapon, error) {
 	weapons, err := r.db.AllWeapons(ctx)
 	if err != nil {
-		logger.LogID(ctx, "[ERROR] Error retrieving weapons %v", err)
+		logger.Error(ctx, "Error retrieving weapons %v", err)
 		return nil, gqlerror.Errorf("Internal Server Error")
 	}
 
@@ -61,7 +61,7 @@ func (r *queryResolver) Weapons(ctx context.Context) ([]*model.Weapon, error) {
 func (r *queryResolver) WeaponByName(ctx context.Context, name string) (*model.Weapon, error) {
 	weapons, err := r.db.AllWeapons(ctx)
 	if err != nil {
-		logger.LogID(ctx, "[ERROR] Error retrieving weapons %v", err)
+		logger.Error(ctx, "Error retrieving weapons %v", err)
 		return nil, gqlerror.Errorf("Internal Server Error")
 	}
 	for _, weapon := range weapons {
@@ -76,7 +76,7 @@ func (r *queryResolver) WeaponByName(ctx context.Context, name string) (*model.W
 func (r *queryResolver) WeaponsByAttributeScaling(ctx context.Context, attribute model.Attributes, scale model.AttributeScales) ([]*model.Weapon, error) {
 	weapons, err := r.db.AllWeapons(ctx)
 	if err != nil {
-		logger.LogID(ctx, "[ERROR] Error retrieving weapons %v", err)
+		logger.Error(ctx, "Error retrieving weapons %v", err)
 		return nil, gqlerror.Errorf("Internal Server Error")
 	}
 	results := []*model.Weapon{}
@@ -108,7 +108,7 @@ func (r *queryResolver) WeaponsByAttributeScaling(ctx context.Context, attribute
 func (r *queryResolver) WeaponsByCustom(ctx context.Context, custom bool) ([]*model.Weapon, error) {
 	weapons, err := r.db.AllWeapons(ctx)
 	if err != nil {
-		logger.LogID(ctx, "[ERROR] Error retrieving weapons %v", err)
+		logger.Error(ctx, "Error retrieving weapons %v", err)
 		return nil, gqlerror.Errorf("Internal Server Error")
 	}
 
@@ -125,7 +125,7 @@ func (r *queryResolver) WeaponsByCustom(ctx context.Context, custom bool) ([]*mo
 func (r *queryResolver) WeaponByID(ctx context.Context, id string) (*model.Weapon, error) {
 	weapons, err := r.db.AllWeapons(ctx)
 	if err != nil {
-		logger.LogID(ctx, "[ERROR] Error retrieving weapons %v", err)
+		logger.Error(ctx, "Error retrieving weapons %v", err)
 		return nil, gqlerror.Errorf("Internal Server Error")
 	}
 

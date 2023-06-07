@@ -26,7 +26,10 @@ func TestSrvSqlDB(t *testing.T) {
 		t.Skip("Skipping testing in sql mode")
 	}
 
-	db := sqlDB.NewDB("root:qwerty@tcp(0.0.0.0:3306)/db")
+	db, err := sqlDB.NewDB("root:qwerty@tcp(0.0.0.0:3306)/db")
+	if err != nil {
+		require.FailNow(t, "unable to connect to sql db")
+	}
 	srv := newHandler(graph.NewResolver(db))
 	c := client.New(srv)
 

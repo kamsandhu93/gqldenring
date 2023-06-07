@@ -4,7 +4,6 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"log"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/kamsandhu93/gqldenring/internal/logger"
@@ -19,22 +18,24 @@ type db struct {
 	db      *sql.DB
 }
 
-func NewDB(sqlConn string) *db {
+func NewDB(sqlConn string) (*db, error) {
 	sqlDB, err := sql.Open("mysql",
 		sqlConn)
 	if err != nil {
-		log.Fatalf("[ERROR] Unable to connect to database with conn string %s: %v", sqlConn, err)
+		logger.Error(context.Background(), "Unable to connect to database with conn string %s: %v", sqlConn, err)
+		return nil, fmt.Errorf("unable to connect to database")
 	}
 
 	err = sqlDB.Ping()
 	if err != nil {
-		log.Fatalf("[ERROR] Pinging database with conn string %s: %v", sqlConn, err)
+		logger.Error(context.Background(), "Pinging database with conn string %s: %v", sqlConn, err)
+		return nil, fmt.Errorf("unable to connect to database")
 	}
 
 	return &db{
 		sqlConn: sqlConn,
 		db:      sqlDB,
-	}
+	}, nil
 }
 
 func (db *db) AllWeapons(ctx context.Context) ([]*model.Weapon, error) {
@@ -48,20 +49,20 @@ func (db *db) NewWeapon(ctx context.Context, newWeapon *model.NewWeapon) (*model
 	)
 
 	if err != nil {
-		logger.LogID(ctx, "[ERROR] inserting row %v", err)
+		logger.Error(ctx, "inserting row %v", err)
 		return nil, err
 	}
 
 	lastId, err := res.LastInsertId()
 	if err != nil {
-		logger.LogID(ctx, "[ERROR] getting last id  %v", err)
+		logger.Error(ctx, "getting last id  %v", err)
 		return nil, err
 
 	}
 
 	weapons, err := dbQuery(ctx, db.db, "SELECT * FROM weapons WHERE id = ?", lastId)
 	if err != nil {
-		logger.LogID(ctx, "[ERROR] Retrieving weapons details %v", err)
+		logger.Error(ctx, "Retrieving weapons details %v", err)
 		return nil, err
 	}
 
@@ -72,20 +73,20 @@ func (db *db) UpdateWeapon(ctx context.Context, id string, newWeapon *model.NewW
 	res, err := db.db.Exec("UPDATE weapons SET name=? WHERE id=?", newWeapon.Name, id)
 
 	if err != nil {
-		logger.LogID(ctx, "[ERROR] inserting row %v", err)
+		logger.Error(ctx, "inserting row %v", err)
 		return nil, err
 	}
 
 	rowCnt, err := res.RowsAffected()
 	if err != nil {
-		logger.LogID(ctx, "[ERROR] getting row count  %v", err)
+		logger.Error(ctx, "getting row count  %v", err)
 		return nil, err
 	}
-	logger.LogID(ctx, "[INFO] db update ID = %s, affected = %d\n", id, rowCnt)
+	logger.Info(ctx, "db update ID = %s, affected = %d\n", id, rowCnt)
 
 	weapons, err := dbQuery(ctx, db.db, "SELECT * FROM weapons WHERE id = ?", id)
 	if err != nil {
-		logger.LogID(ctx, "[ERROR] Retrieving weapons details %v", err)
+		logger.Error(ctx, "Retrieving weapons details %v", err)
 		return nil, err
 	}
 
@@ -97,20 +98,20 @@ func (db *db) DeleteWeapon(ctx context.Context, id string) (*model.Weapon, error
 	res, err := db.db.Exec("UPDATE weapons SET Deleted=TRUE WHERE id=?", id)
 
 	if err != nil {
-		logger.LogID(ctx, "[ERROR] soft deleting row %v", err)
+		logger.Error(ctx, "soft deleting row %v", err)
 		return nil, err
 	}
 
 	rowCnt, err := res.RowsAffected()
 	if err != nil {
-		logger.LogID(ctx, "[ERROR] getting row count  %v", err)
+		logger.Error(ctx, "getting row count  %v", err)
 		return nil, err
 	}
-	logger.LogID(ctx, "[INFO] db delete ID = %s, affected = %d\n", id, rowCnt)
+	logger.Info(ctx, "db delete ID = %s, affected = %d\n", id, rowCnt)
 
 	weapons, err := dbQuery(ctx, db.db, "SELECT * FROM weapons WHERE id = ?", id)
 	if err != nil {
-		logger.LogID(ctx, "[ERROR] Retrieving weapons details %v", err)
+		logger.Error(ctx, "Retrieving weapons details %v", err)
 		return nil, err
 	}
 
@@ -120,13 +121,13 @@ func (db *db) DeleteWeapon(ctx context.Context, id string) (*model.Weapon, error
 func dbQuery(ctx context.Context, db *sql.DB, query string, values ...any) ([]*model.Weapon, error) {
 	rows, err := db.Query(query, values...)
 	if err != nil {
-		logger.LogID(ctx, "[ERROR] select * error %v", err)
+		logger.Error(ctx, "select * error %v", err)
 		return nil, fmt.Errorf("select * from db error %w", err)
 	}
 	defer func(rows *sql.Rows) {
 		err := rows.Close()
 		if err != nil {
-			logger.LogID(ctx, "[ERROR] closing db rows %v", err)
+			logger.Error(ctx, "closing db rows %v", err)
 		}
 	}(rows)
 
@@ -142,7 +143,7 @@ func dbQuery(ctx context.Context, db *sql.DB, query string, values ...any) ([]*m
 			&weapon.LastUpdated, &deleted)
 
 		if err != nil {
-			logger.LogID(ctx, "[ERROR] Error scanning rows %v", err)
+			logger.Error(ctx, "Error scanning rows %v", err)
 			return nil, fmt.Errorf("error scanning rows %w", err)
 		}
 
@@ -151,7 +152,7 @@ func dbQuery(ctx context.Context, db *sql.DB, query string, values ...any) ([]*m
 
 	err = rows.Err()
 	if err != nil {
-		logger.LogID(ctx, "[ERROR] Error fetching all rows from sql db %v", err)
+		logger.Error(ctx, "Error fetching all rows from sql db %v", err)
 		return nil, fmt.Errorf("error fetching all rows from sql db %w", err)
 	}
 

@@ -59,7 +59,7 @@ func (db *db) NewWeapon(ctx context.Context, weapon *model.NewWeapon) (*model.We
 		LastUpdated: time.Now().Format(time.DateTime),
 	}
 	db.data = append(db.data, newWeapon)
-	logger.LogID(ctx, "[INFO] Created weapon with ID %s", newWeapon.ID)
+	logger.Info(ctx, "Created weapon with ID %s", newWeapon.ID)
 	return newWeapon, nil
 }
 
@@ -78,7 +78,7 @@ func (db *db) UpdateWeapon(ctx context.Context, id string, weapon *model.NewWeap
 			break
 		}
 	}
-	logger.LogID(ctx, "[INFO] Updated weapon with ID %s", newWeapon.ID)
+	logger.Info(ctx, "Updated weapon with ID %s", newWeapon.ID)
 
 	return newWeapon, nil
 }
@@ -95,7 +95,7 @@ func (db *db) DeleteWeapon(ctx context.Context, id string) (*model.Weapon, error
 			break
 		}
 	}
-	logger.LogID(ctx, "[INFO] Deleted weapon with ID %s", delwep.ID)
+	logger.Info(ctx, "Deleted weapon with ID %s", delwep.ID)
 
 	return delwep, nil
 }

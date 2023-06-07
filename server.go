@@ -42,10 +42,15 @@ func main() {
 
 	var db graph.DB
 	if sqlConn != "" {
-		log.Print("[INFO] Using sql db")
-		db = sqlDB.NewDB(sqlConn)
+		logger.Info(context.Background(), "Using sql db")
+		var err error
+		db, err = sqlDB.NewDB(sqlConn)
+		if err != nil {
+			logger.Error(context.Background(), "Failed to connect to db")
+			os.Exit(1)
+		}
 	} else {
-		log.Print("[INFO] Using in memory db")
+		logger.Info(context.Background(), "Using in memory db")
 		db = memDB.NewDB()
 	}
 
@@ -53,7 +58,7 @@ func main() {
 
 	h := newHandler(resolver)
 
-	http.Handle("/", middleware.WithReqID(logger.RequestIDKey, middleware.WithLogging(logger.LogID, playground.Handler("GraphQL playground", "/query"))))
+	http.Handle("/", middleware.WithReqID(logger.RequestIDKey, middleware.WithLogging(logger.Info, playground.Handler("GraphQL playground", "/query"))))
 	http.Handle("/query", h)
 	http.HandleFunc("/health", func(writer http.ResponseWriter, request *http.Request) {
 		_, err := io.WriteString(writer, "okay\n")
@@ -62,7 +67,7 @@ func main() {
 		}
 	})
 
-	log.Printf("Starting server version=%s commit=%s date=%s connect to http://localhost:%s/ for GraphQL playground",
+	logger.Info(context.Background(), "Starting server version=%s commit=%s date=%s connect to http://localhost:%s/ for GraphQL playground",
 		version, commit, date, port)
 	log.Fatal(http.ListenAndServe(":"+port, nil))
 }
@@ -71,17 +76,17 @@ func newHandler(resolver *graph.Resolver) http.Handler {
 	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: resolver}))
 	srv.AroundOperations(func(ctx context.Context, next graphql.OperationHandler) graphql.ResponseHandler {
 		oc := graphql.GetOperationContext(ctx)
-		logger.LogID(ctx, "[INFO] Incoming operation: %s %s %s", oc.OperationName, oc.Variables, strings.Replace(oc.RawQuery, "\n", " ", -1))
+		logger.Info(ctx, "Incoming operation: %s %s %s", oc.OperationName, oc.Variables, strings.Replace(oc.RawQuery, "\n", " ", -1))
 		return next(ctx)
 	})
 	srv.SetRecoverFunc(func(ctx context.Context, err interface{}) error {
-		logger.LogID(ctx, "[ERROR] Panic caused by %v", err)
+		logger.Error(ctx, "Panic caused by %v", err)
 		debug.PrintStack()
 		return gqlerror.Errorf("Internal server error!")
 	})
 
 	h := middleware.WithReqID(logger.RequestIDKey,
-		middleware.WithLogging(logger.LogID,
+		middleware.WithLogging(logger.Info,
 			srv))
 
 	return h

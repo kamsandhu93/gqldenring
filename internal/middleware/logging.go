@@ -11,12 +11,12 @@ func WithLogging(logFn func(context.Context, string, ...any), h http.Handler) ht
 		start := time.Now()
 		uri := r.RequestURI
 		method := r.Method
-		logFn(r.Context(), "[INFO] Incoming request %s %s", uri, method)
+		logFn(r.Context(), "Incoming request %s %s", uri, method)
 
 		h.ServeHTTP(rw, r) // serve the original request
 
 		duration := time.Since(start)
-		logFn(r.Context(), "[INFO] Request complete%s", duration)
+		logFn(r.Context(), "Request complete%s", duration)
 	}
 	return http.HandlerFunc(fn)
 }
