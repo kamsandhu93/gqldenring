@@ -9,8 +9,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/kamsandhu93/gqldenring/logger"
-	"github.com/kamsandhu93/gqldenring/model"
+	"github.com/kamsandhu93/gqldenring/internal/logger"
+	"github.com/kamsandhu93/gqldenring/internal/model"
 )
 
 var (

@@ -10,16 +10,16 @@ import (
 	"strings"
 
 	"github.com/99designs/gqlgen/graphql"
-	"github.com/kamsandhu93/gqldenring/logger"
-	"github.com/kamsandhu93/gqldenring/middleware"
+	memDB "github.com/kamsandhu93/gqldenring/internal/db/memory"
+	sqlDB "github.com/kamsandhu93/gqldenring/internal/db/sql"
+	"github.com/kamsandhu93/gqldenring/internal/logger"
+	"github.com/kamsandhu93/gqldenring/internal/middleware"
 	"github.com/vektah/gqlparser/v2/gqlerror"
 
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
-	memDB "github.com/kamsandhu93/gqldenring/db/memory"
-	sqlDB "github.com/kamsandhu93/gqldenring/db/sql"
-	"github.com/kamsandhu93/gqldenring/graph"
-	"github.com/kamsandhu93/gqldenring/graph/generated"
+	"github.com/kamsandhu93/gqldenring/internal/graph"
+	"github.com/kamsandhu93/gqldenring/internal/graph/generated"
 )
 
 const defaultPort = "8080"

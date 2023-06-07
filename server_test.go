@@ -5,10 +5,10 @@ import (
 	"testing"
 
 	"github.com/99designs/gqlgen/client"
-	memDB "github.com/kamsandhu93/gqldenring/db/memory"
-	sqlDB "github.com/kamsandhu93/gqldenring/db/sql"
-	"github.com/kamsandhu93/gqldenring/graph"
-	"github.com/kamsandhu93/gqldenring/model"
+	memDB "github.com/kamsandhu93/gqldenring/internal/db/memory"
+	sqlDB "github.com/kamsandhu93/gqldenring/internal/db/sql"
+	"github.com/kamsandhu93/gqldenring/internal/graph"
+	"github.com/kamsandhu93/gqldenring/internal/model"
 	"github.com/stretchr/testify/require"
 )
 

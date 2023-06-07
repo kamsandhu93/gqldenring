@@ -8,9 +8,9 @@ import (
 	"context"
 	"strings"
 
-	"github.com/kamsandhu93/gqldenring/graph/generated"
-	"github.com/kamsandhu93/gqldenring/logger"
-	"github.com/kamsandhu93/gqldenring/model"
+	"github.com/kamsandhu93/gqldenring/internal/graph/generated"
+	"github.com/kamsandhu93/gqldenring/internal/logger"
+	"github.com/kamsandhu93/gqldenring/internal/model"
 	"github.com/vektah/gqlparser/v2/gqlerror"
 )
 

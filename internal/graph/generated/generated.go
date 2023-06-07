@@ -13,7 +13,7 @@ import (
 
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/introspection"
-	"github.com/kamsandhu93/gqldenring/model"
+	"github.com/kamsandhu93/gqldenring/internal/model"
 	gqlparser "github.com/vektah/gqlparser/v2"
 	"github.com/vektah/gqlparser/v2/ast"
 )
@@ -546,7 +546,7 @@ func (ec *executionContext) field_Mutation_createWeapon_args(ctx context.Context
 	var arg0 *model.NewWeapon
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalOnewWeapon2ᚖgithubᚗcomᚋkamsandhu93ᚋgqldenringᚋmodelᚐNewWeapon(ctx, tmp)
+		arg0, err = ec.unmarshalOnewWeapon2ᚖgithubᚗcomᚋkamsandhu93ᚋgqldenringᚋinternalᚋmodelᚐNewWeapon(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -585,7 +585,7 @@ func (ec *executionContext) field_Mutation_updateWeapon_args(ctx context.Context
 	var arg1 *model.NewWeapon
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg1, err = ec.unmarshalOnewWeapon2ᚖgithubᚗcomᚋkamsandhu93ᚋgqldenringᚋmodelᚐNewWeapon(ctx, tmp)
+		arg1, err = ec.unmarshalOnewWeapon2ᚖgithubᚗcomᚋkamsandhu93ᚋgqldenringᚋinternalᚋmodelᚐNewWeapon(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -660,7 +660,7 @@ func (ec *executionContext) field_Query_weaponsByAttributeScaling_args(ctx conte
 	var arg0 model.Attributes
 	if tmp, ok := rawArgs["attribute"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("attribute"))
-		arg0, err = ec.unmarshalNAttributes2githubᚗcomᚋkamsandhu93ᚋgqldenringᚋmodelᚐAttributes(ctx, tmp)
+		arg0, err = ec.unmarshalNAttributes2githubᚗcomᚋkamsandhu93ᚋgqldenringᚋinternalᚋmodelᚐAttributes(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -669,7 +669,7 @@ func (ec *executionContext) field_Query_weaponsByAttributeScaling_args(ctx conte
 	var arg1 model.AttributeScales
 	if tmp, ok := rawArgs["scale"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("scale"))
-		arg1, err = ec.unmarshalNAttributeScales2githubᚗcomᚋkamsandhu93ᚋgqldenringᚋmodelᚐAttributeScales(ctx, tmp)
+		arg1, err = ec.unmarshalNAttributeScales2githubᚗcomᚋkamsandhu93ᚋgqldenringᚋinternalᚋmodelᚐAttributeScales(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -741,7 +741,7 @@ func (ec *executionContext) _Mutation_createWeapon(ctx context.Context, field gr
 	}
 	res := resTmp.(*model.Weapon)
 	fc.Result = res
-	return ec.marshalOweapon2ᚖgithubᚗcomᚋkamsandhu93ᚋgqldenringᚋmodelᚐWeapon(ctx, field.Selections, res)
+	return ec.marshalOweapon2ᚖgithubᚗcomᚋkamsandhu93ᚋgqldenringᚋinternalᚋmodelᚐWeapon(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_createWeapon(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -849,7 +849,7 @@ func (ec *executionContext) _Mutation_updateWeapon(ctx context.Context, field gr
 	}
 	res := resTmp.(*model.Weapon)
 	fc.Result = res
-	return ec.marshalOweapon2ᚖgithubᚗcomᚋkamsandhu93ᚋgqldenringᚋmodelᚐWeapon(ctx, field.Selections, res)
+	return ec.marshalOweapon2ᚖgithubᚗcomᚋkamsandhu93ᚋgqldenringᚋinternalᚋmodelᚐWeapon(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_updateWeapon(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -957,7 +957,7 @@ func (ec *executionContext) _Mutation_deleteWeapon(ctx context.Context, field gr
 	}
 	res := resTmp.(*model.Weapon)
 	fc.Result = res
-	return ec.marshalOweapon2ᚖgithubᚗcomᚋkamsandhu93ᚋgqldenringᚋmodelᚐWeapon(ctx, field.Selections, res)
+	return ec.marshalOweapon2ᚖgithubᚗcomᚋkamsandhu93ᚋgqldenringᚋinternalᚋmodelᚐWeapon(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_deleteWeapon(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -1068,7 +1068,7 @@ func (ec *executionContext) _Query_weapons(ctx context.Context, field graphql.Co
 	}
 	res := resTmp.([]*model.Weapon)
 	fc.Result = res
-	return ec.marshalNweapon2ᚕᚖgithubᚗcomᚋkamsandhu93ᚋgqldenringᚋmodelᚐWeaponᚄ(ctx, field.Selections, res)
+	return ec.marshalNweapon2ᚕᚖgithubᚗcomᚋkamsandhu93ᚋgqldenringᚋinternalᚋmodelᚐWeaponᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_weapons(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -1165,7 +1165,7 @@ func (ec *executionContext) _Query_weaponByName(ctx context.Context, field graph
 	}
 	res := resTmp.(*model.Weapon)
 	fc.Result = res
-	return ec.marshalOweapon2ᚖgithubᚗcomᚋkamsandhu93ᚋgqldenringᚋmodelᚐWeapon(ctx, field.Selections, res)
+	return ec.marshalOweapon2ᚖgithubᚗcomᚋkamsandhu93ᚋgqldenringᚋinternalᚋmodelᚐWeapon(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_weaponByName(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -1273,7 +1273,7 @@ func (ec *executionContext) _Query_weaponsByAttributeScaling(ctx context.Context
 	}
 	res := resTmp.([]*model.Weapon)
 	fc.Result = res
-	return ec.marshalOweapon2ᚕᚖgithubᚗcomᚋkamsandhu93ᚋgqldenringᚋmodelᚐWeapon(ctx, field.Selections, res)
+	return ec.marshalOweapon2ᚕᚖgithubᚗcomᚋkamsandhu93ᚋgqldenringᚋinternalᚋmodelᚐWeapon(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_weaponsByAttributeScaling(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -1384,7 +1384,7 @@ func (ec *executionContext) _Query_WeaponsByCustom(ctx context.Context, field gr
 	}
 	res := resTmp.([]*model.Weapon)
 	fc.Result = res
-	return ec.marshalNweapon2ᚕᚖgithubᚗcomᚋkamsandhu93ᚋgqldenringᚋmodelᚐWeaponᚄ(ctx, field.Selections, res)
+	return ec.marshalNweapon2ᚕᚖgithubᚗcomᚋkamsandhu93ᚋgqldenringᚋinternalᚋmodelᚐWeaponᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_WeaponsByCustom(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -1492,7 +1492,7 @@ func (ec *executionContext) _Query_WeaponById(ctx context.Context, field graphql
 	}
 	res := resTmp.(*model.Weapon)
 	fc.Result = res
-	return ec.marshalOweapon2ᚖgithubᚗcomᚋkamsandhu93ᚋgqldenringᚋmodelᚐWeapon(ctx, field.Selections, res)
+	return ec.marshalOweapon2ᚖgithubᚗcomᚋkamsandhu93ᚋgqldenringᚋinternalᚋmodelᚐWeapon(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_WeaponById(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -3897,7 +3897,7 @@ func (ec *executionContext) _weapon_str(ctx context.Context, field graphql.Colle
 	}
 	res := resTmp.(model.AttributeScales)
 	fc.Result = res
-	return ec.marshalNAttributeScales2githubᚗcomᚋkamsandhu93ᚋgqldenringᚋmodelᚐAttributeScales(ctx, field.Selections, res)
+	return ec.marshalNAttributeScales2githubᚗcomᚋkamsandhu93ᚋgqldenringᚋinternalᚋmodelᚐAttributeScales(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_weapon_str(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -3941,7 +3941,7 @@ func (ec *executionContext) _weapon_dex(ctx context.Context, field graphql.Colle
 	}
 	res := resTmp.(model.AttributeScales)
 	fc.Result = res
-	return ec.marshalNAttributeScales2githubᚗcomᚋkamsandhu93ᚋgqldenringᚋmodelᚐAttributeScales(ctx, field.Selections, res)
+	return ec.marshalNAttributeScales2githubᚗcomᚋkamsandhu93ᚋgqldenringᚋinternalᚋmodelᚐAttributeScales(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_weapon_dex(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -3985,7 +3985,7 @@ func (ec *executionContext) _weapon_int(ctx context.Context, field graphql.Colle
 	}
 	res := resTmp.(model.AttributeScales)
 	fc.Result = res
-	return ec.marshalNAttributeScales2githubᚗcomᚋkamsandhu93ᚋgqldenringᚋmodelᚐAttributeScales(ctx, field.Selections, res)
+	return ec.marshalNAttributeScales2githubᚗcomᚋkamsandhu93ᚋgqldenringᚋinternalᚋmodelᚐAttributeScales(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_weapon_int(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -4029,7 +4029,7 @@ func (ec *executionContext) _weapon_fai(ctx context.Context, field graphql.Colle
 	}
 	res := resTmp.(model.AttributeScales)
 	fc.Result = res
-	return ec.marshalNAttributeScales2githubᚗcomᚋkamsandhu93ᚋgqldenringᚋmodelᚐAttributeScales(ctx, field.Selections, res)
+	return ec.marshalNAttributeScales2githubᚗcomᚋkamsandhu93ᚋgqldenringᚋinternalᚋmodelᚐAttributeScales(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_weapon_fai(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -4073,7 +4073,7 @@ func (ec *executionContext) _weapon_arc(ctx context.Context, field graphql.Colle
 	}
 	res := resTmp.(model.AttributeScales)
 	fc.Result = res
-	return ec.marshalNAttributeScales2githubᚗcomᚋkamsandhu93ᚋgqldenringᚋmodelᚐAttributeScales(ctx, field.Selections, res)
+	return ec.marshalNAttributeScales2githubᚗcomᚋkamsandhu93ᚋgqldenringᚋinternalᚋmodelᚐAttributeScales(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_weapon_arc(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -5426,23 +5426,23 @@ func (ec *executionContext) _weapon(ctx context.Context, sel ast.SelectionSet, o
 
 // region    ***************************** type.gotpl *****************************
 
-func (ec *executionContext) unmarshalNAttributeScales2githubᚗcomᚋkamsandhu93ᚋgqldenringᚋmodelᚐAttributeScales(ctx context.Context, v interface{}) (model.AttributeScales, error) {
+func (ec *executionContext) unmarshalNAttributeScales2githubᚗcomᚋkamsandhu93ᚋgqldenringᚋinternalᚋmodelᚐAttributeScales(ctx context.Context, v interface{}) (model.AttributeScales, error) {
 	var res model.AttributeScales
 	err := res.UnmarshalGQL(v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNAttributeScales2githubᚗcomᚋkamsandhu93ᚋgqldenringᚋmodelᚐAttributeScales(ctx context.Context, sel ast.SelectionSet, v model.AttributeScales) graphql.Marshaler {
+func (ec *executionContext) marshalNAttributeScales2githubᚗcomᚋkamsandhu93ᚋgqldenringᚋinternalᚋmodelᚐAttributeScales(ctx context.Context, sel ast.SelectionSet, v model.AttributeScales) graphql.Marshaler {
 	return v
 }
 
-func (ec *executionContext) unmarshalNAttributes2githubᚗcomᚋkamsandhu93ᚋgqldenringᚋmodelᚐAttributes(ctx context.Context, v interface{}) (model.Attributes, error) {
+func (ec *executionContext) unmarshalNAttributes2githubᚗcomᚋkamsandhu93ᚋgqldenringᚋinternalᚋmodelᚐAttributes(ctx context.Context, v interface{}) (model.Attributes, error) {
 	var res model.Attributes
 	err := res.UnmarshalGQL(v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNAttributes2githubᚗcomᚋkamsandhu93ᚋgqldenringᚋmodelᚐAttributes(ctx context.Context, sel ast.SelectionSet, v model.Attributes) graphql.Marshaler {
+func (ec *executionContext) marshalNAttributes2githubᚗcomᚋkamsandhu93ᚋgqldenringᚋinternalᚋmodelᚐAttributes(ctx context.Context, sel ast.SelectionSet, v model.Attributes) graphql.Marshaler {
 	return v
 }
 
@@ -5759,7 +5759,7 @@ func (ec *executionContext) marshalN__TypeKind2string(ctx context.Context, sel a
 	return res
 }
 
-func (ec *executionContext) marshalNweapon2ᚕᚖgithubᚗcomᚋkamsandhu93ᚋgqldenringᚋmodelᚐWeaponᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Weapon) graphql.Marshaler {
+func (ec *executionContext) marshalNweapon2ᚕᚖgithubᚗcomᚋkamsandhu93ᚋgqldenringᚋinternalᚋmodelᚐWeaponᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Weapon) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -5783,7 +5783,7 @@ func (ec *executionContext) marshalNweapon2ᚕᚖgithubᚗcomᚋkamsandhu93ᚋgq
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNweapon2ᚖgithubᚗcomᚋkamsandhu93ᚋgqldenringᚋmodelᚐWeapon(ctx, sel, v[i])
+			ret[i] = ec.marshalNweapon2ᚖgithubᚗcomᚋkamsandhu93ᚋgqldenringᚋinternalᚋmodelᚐWeapon(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -5803,7 +5803,7 @@ func (ec *executionContext) marshalNweapon2ᚕᚖgithubᚗcomᚋkamsandhu93ᚋgq
 	return ret
 }
 
-func (ec *executionContext) marshalNweapon2ᚖgithubᚗcomᚋkamsandhu93ᚋgqldenringᚋmodelᚐWeapon(ctx context.Context, sel ast.SelectionSet, v *model.Weapon) graphql.Marshaler {
+func (ec *executionContext) marshalNweapon2ᚖgithubᚗcomᚋkamsandhu93ᚋgqldenringᚋinternalᚋmodelᚐWeapon(ctx context.Context, sel ast.SelectionSet, v *model.Weapon) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -6073,7 +6073,7 @@ func (ec *executionContext) marshalO__Type2ᚖgithubᚗcomᚋ99designsᚋgqlgen�
 	return ec.___Type(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalOnewWeapon2ᚖgithubᚗcomᚋkamsandhu93ᚋgqldenringᚋmodelᚐNewWeapon(ctx context.Context, v interface{}) (*model.NewWeapon, error) {
+func (ec *executionContext) unmarshalOnewWeapon2ᚖgithubᚗcomᚋkamsandhu93ᚋgqldenringᚋinternalᚋmodelᚐNewWeapon(ctx context.Context, v interface{}) (*model.NewWeapon, error) {
 	if v == nil {
 		return nil, nil
 	}
@@ -6081,7 +6081,7 @@ func (ec *executionContext) unmarshalOnewWeapon2ᚖgithubᚗcomᚋkamsandhu93ᚋ
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalOweapon2ᚕᚖgithubᚗcomᚋkamsandhu93ᚋgqldenringᚋmodelᚐWeapon(ctx context.Context, sel ast.SelectionSet, v []*model.Weapon) graphql.Marshaler {
+func (ec *executionContext) marshalOweapon2ᚕᚖgithubᚗcomᚋkamsandhu93ᚋgqldenringᚋinternalᚋmodelᚐWeapon(ctx context.Context, sel ast.SelectionSet, v []*model.Weapon) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -6108,7 +6108,7 @@ func (ec *executionContext) marshalOweapon2ᚕᚖgithubᚗcomᚋkamsandhu93ᚋgq
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalOweapon2ᚖgithubᚗcomᚋkamsandhu93ᚋgqldenringᚋmodelᚐWeapon(ctx, sel, v[i])
+			ret[i] = ec.marshalOweapon2ᚖgithubᚗcomᚋkamsandhu93ᚋgqldenringᚋinternalᚋmodelᚐWeapon(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -6122,7 +6122,7 @@ func (ec *executionContext) marshalOweapon2ᚕᚖgithubᚗcomᚋkamsandhu93ᚋgq
 	return ret
 }
 
-func (ec *executionContext) marshalOweapon2ᚖgithubᚗcomᚋkamsandhu93ᚋgqldenringᚋmodelᚐWeapon(ctx context.Context, sel ast.SelectionSet, v *model.Weapon) graphql.Marshaler {
+func (ec *executionContext) marshalOweapon2ᚖgithubᚗcomᚋkamsandhu93ᚋgqldenringᚋinternalᚋmodelᚐWeapon(ctx context.Context, sel ast.SelectionSet, v *model.Weapon) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}

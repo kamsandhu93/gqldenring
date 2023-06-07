@@ -7,8 +7,8 @@ import (
 	"log"
 
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/kamsandhu93/gqldenring/logger"
-	"github.com/kamsandhu93/gqldenring/model"
+	"github.com/kamsandhu93/gqldenring/internal/logger"
+	"github.com/kamsandhu93/gqldenring/internal/model"
 )
 
 const cols = "`Name`, `Type`, `Phy`, `Mag`, `Fir`, `Lit`, `Hol`, `Cri`, `Sta`, `Str`, `Dex`, `Int`, `Fai`, `Arc`, `Any`, `PhyB`, `MagB`, `FirB`, `LitB`, `HolB`, `Bst`, `Rst`, `Wgt`, `Upgrade`, `Custom`"
