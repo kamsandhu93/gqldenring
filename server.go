@@ -58,9 +58,11 @@ func main() {
 
 	h := newHandler(resolver)
 
-	http.Handle("/", middleware.WithReqID(logger.RequestIDKey, middleware.WithLogging(logger.Info, playground.Handler("GraphQL playground", "/query"))))
-	http.Handle("/query", h)
-	http.HandleFunc("/health", func(writer http.ResponseWriter, request *http.Request) {
+	mux := http.NewServeMux()
+
+	mux.Handle("/", middleware.WithReqID(logger.RequestIDKey, middleware.WithLogging(logger.Info, playground.Handler("GraphQL playground", "/query"))))
+	mux.Handle("/query", h)
+	mux.HandleFunc("/health", func(writer http.ResponseWriter, request *http.Request) {
 		_, err := io.WriteString(writer, "okay\n")
 		if err != nil {
 			panic(1)
@@ -69,7 +71,7 @@ func main() {
 
 	logger.Info(context.Background(), "Starting server version=%s commit=%s date=%s connect to http://localhost:%s/ for GraphQL playground",
 		version, commit, date, port)
-	log.Fatal(http.ListenAndServe(":"+port, nil))
+	log.Fatal(http.ListenAndServe(":"+port, mux))
 }
 
 func newHandler(resolver *graph.Resolver) http.Handler {
