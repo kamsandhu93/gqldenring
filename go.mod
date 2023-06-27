@@ -6,7 +6,7 @@ require (
 	github.com/99designs/gqlgen v0.17.31
 	github.com/go-sql-driver/mysql v1.7.1
 	github.com/stretchr/testify v1.8.4
-	github.com/vektah/gqlparser/v2 v2.5.1
+	github.com/vektah/gqlparser/v2 v2.5.6
 )
 
 require (
@@ -24,6 +24,5 @@ require (
 	golang.org/x/sys v0.5.0 // indirect
 	golang.org/x/text v0.7.0 // indirect
 	golang.org/x/tools v0.6.0 // indirect
-	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
